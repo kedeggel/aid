@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Automated Intrusion Detection</string>
+    <string name="title_activity_live_stream">Live Stream</string>
+    <string name="title_activity_gallery">Gallery</string>
     <string name="title_activity_settings">Settings</string>
 
     <!-- Strings related to Settings -->
