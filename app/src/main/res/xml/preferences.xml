@@ -1,10 +1,9 @@
-<PreferenceScreen xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <EditTextPreference
         android:capitalize="words"
         android:inputType="textCapWords"
-        android:key="example_text"
+        android:key="@string/pref_key_pi_ip"
         android:maxLines="1"
         android:selectAllOnFocus="true"
         android:singleLine="true"
@@ -13,7 +12,7 @@
         android:capitalize="words"
         android:defaultValue="22"
         android:inputType="number"
-        android:key="example_text"
+        android:key="@string/pref_key_pi_port"
         android:maxLines="1"
         android:selectAllOnFocus="true"
         android:singleLine="true"
@@ -21,7 +20,7 @@
     <EditTextPreference
         android:capitalize="words"
         android:inputType="textCapWords"
-        android:key="example_text"
+        android:key="@string/pref_key_username"
         android:maxLines="1"
         android:selectAllOnFocus="true"
         android:singleLine="true"
@@ -29,9 +28,10 @@
     <EditTextPreference
         android:capitalize="words"
         android:inputType="textPassword"
-        android:key="example_text"
+        android:key="@string/pref_key_password"
         android:maxLines="1"
         android:selectAllOnFocus="true"
         android:singleLine="true"
+        android:summary="*******"
         android:title="@string/pref_title_password" />
 </PreferenceScreen>
