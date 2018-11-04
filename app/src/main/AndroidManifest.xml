@@ -19,6 +19,8 @@
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings" />
+        <activity android:name=".LiveStream" />
     </application>
 
+    <uses-permission android:name="android.permission.INTERNET" />
 </manifest>
