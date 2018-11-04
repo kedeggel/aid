@@ -23,5 +23,5 @@ public class MainActivity extends AppCompatActivity {
     public void openLiveStream(View view) {}
 
     // TODO
-    public void openGalery(View view) {}
+    public void openGallery(View view) {}
 }

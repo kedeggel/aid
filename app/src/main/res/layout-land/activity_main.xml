@@ -36,14 +36,6 @@
             android:text="@string/title_activity_gallery"
             android:textAppearance="@style/TextAppearance.AppCompat.Display1"
             android:visibility="visible" />
-    </LinearLayout>
-
-    <LinearLayout
-        style="?android:attr/buttonBarStyle"
-        android:layout_width="match_parent"
-        android:layout_height="0dip"
-        android:layout_weight="1"
-        android:orientation="horizontal">
 
         <Button
             android:id="@+id/btn_settings"
@@ -57,35 +49,35 @@
             android:text="@string/title_activity_settings"
             android:textAppearance="@style/TextAppearance.AppCompat.Display1"
             android:visibility="visible" />
-
-        <Button
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="0dip"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:visibility="invisible" />
     </LinearLayout>
 
     <LinearLayout
+        style="?android:attr/buttonBarStyle"
         android:layout_width="match_parent"
         android:layout_height="0dip"
         android:layout_weight="1"
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/button"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="0dip"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:visibility="invisible" />
+            android:visibility="gone" />
 
         <Button
-            android:id="@+id/button2"
             style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="0dp"
+            android:layout_width="0dip"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:visibility="invisible" />
+            android:visibility="gone" />
+
+        <Button
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:visibility="gone" />
     </LinearLayout>
+
 </LinearLayout>
