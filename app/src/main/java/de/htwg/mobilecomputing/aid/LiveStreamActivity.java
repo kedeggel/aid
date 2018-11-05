@@ -9,7 +9,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-public class LiveStream extends AppCompatActivity {
+public class LiveStreamActivity extends AppCompatActivity {
     private final static String portLiveStream = "8081";
     private WebView wvLiveStream;
 

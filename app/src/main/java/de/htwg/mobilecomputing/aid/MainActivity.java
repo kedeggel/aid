@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void openLiveStream(View view) {
-        Intent intent = new Intent(this, LiveStream.class);
+        Intent intent = new Intent(this, LiveStreamActivity.class);
         startActivity(intent);
     }
 
