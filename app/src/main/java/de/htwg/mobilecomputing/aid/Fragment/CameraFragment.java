@@ -5,10 +5,17 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
+import android.widget.Button;
 
 import de.htwg.mobilecomputing.aid.R;
 
 public class CameraFragment extends Fragment {
+    private WebView cameraView;
+    private Button startCamera;
+    private Button takePicture;
+
+    private boolean cameraOn = false;
 
     //private OnFragmentInteractionListener mListener;
 
@@ -27,8 +34,38 @@ public class CameraFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_camera, container, false);
+
+        cameraView = view.findViewById(R.id.camera_view);
+        startCamera = view.findViewById(R.id.button_start_camera);
+        startCamera.setOnClickListener(startCameraOnClickListener);
+        takePicture = view.findViewById(R.id.button_take_picture);
+        takePicture.setOnClickListener(takePictureOnClickListener);
+
         return view;
     }
+
+    private Button.OnClickListener startCameraOnClickListener = new Button.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            if(cameraOn) {
+                takePicture.setEnabled(false);
+                startCamera.setText(getString(R.string.start_camera));
+                cameraView.loadUrl("about:blank");
+            } else {
+                takePicture.setEnabled(true);
+                startCamera.setText(getString(R.string.stop_camera));
+                cameraView.loadUrl("https://www.google.com/");
+            }
+            cameraOn = !cameraOn;
+        }
+    };
+
+    private Button.OnClickListener takePictureOnClickListener = new Button.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            //todo: take still image with camera and save in library
+        }
+    };
 
     /*@Override
     public void onAttach(Context context) {

@@ -16,8 +16,10 @@ import de.htwg.mobilecomputing.aid.R;
 
 public class MainActivity extends AppCompatActivity {
     private final FragmentManager fragmentManager = getSupportFragmentManager();
-    private final Fragment library = LibraryFragment.newInstance();
     private final Fragment camera = CameraFragment.newInstance();
+    private final Fragment library = LibraryFragment.newInstance();
+
+    private FragmentTransaction fragmentTransaction;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +27,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.fragment, camera).commit();
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
 
@@ -33,7 +37,6 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            FragmentTransaction fragmentTransaction;
             switch (item.getItemId()) {
                 case R.id.navigation_camera:
                     fragmentTransaction = fragmentManager.beginTransaction();
