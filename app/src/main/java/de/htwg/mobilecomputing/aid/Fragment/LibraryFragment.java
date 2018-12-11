@@ -1,14 +1,23 @@
 package de.htwg.mobilecomputing.aid.Fragment;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+
+import de.htwg.mobilecomputing.aid.Library.ItemOffsetDecoration;
+import de.htwg.mobilecomputing.aid.Library.LibraryAdapter;
+import de.htwg.mobilecomputing.aid.Library.LibraryElement;
 import de.htwg.mobilecomputing.aid.R;
 
 public class LibraryFragment extends Fragment {
+    ArrayList<LibraryElement> elements;
     //private OnFragmentInteractionListener mListener;
 
     public static LibraryFragment newInstance() {
@@ -26,6 +35,21 @@ public class LibraryFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_library, container, false);
+
+        //Create Library
+        RecyclerView library = view.findViewById(R.id.LibraryRecycler);
+        //todo: Populate library
+        elements = LibraryElement.generateElements(20);
+        LibraryAdapter adapter = new LibraryAdapter(elements);
+        library.setAdapter(adapter);
+        int spanCount = 4; //Number of columns in Portrait
+        if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
+            spanCount = 5; //Number of columns in Landscape
+        library.setLayoutManager(new GridLayoutManager(view.getContext(), spanCount));
+        //todo Add margin between items
+        //ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(10, spanCount);
+        //library.addItemDecoration(itemDecoration);
+
         return view;
     }
 
