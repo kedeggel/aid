@@ -17,7 +17,7 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.ViewHold
 
     // Provide a direct reference to each of the views within a data item
     // Used to cache the views within the item layout for fast access
-    // todo group items: https://stackoverflow.com/questions/34848401/divide-elements-on-groups-in-recyclerview
+    // todo group items by date: https://stackoverflow.com/questions/34848401/divide-elements-on-groups-in-recyclerview
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         // Your holder should contain a member variable
         // for any view that will be set as you render a row

@@ -46,9 +46,10 @@ public class LibraryFragment extends Fragment {
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
             spanCount = 5; //Number of columns in Landscape
         library.setLayoutManager(new GridLayoutManager(view.getContext(), spanCount));
-        //todo Add margin between items
-        //ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(10, spanCount);
-        //library.addItemDecoration(itemDecoration);
+
+        //Add margin between library items
+        ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(12, spanCount);
+        library.addItemDecoration(itemDecoration);
 
         return view;
     }

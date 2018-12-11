@@ -24,8 +24,20 @@ public class ItemOffsetDecoration extends RecyclerView.ItemDecoration {
     @Override
     public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
         super.getItemOffsets(outRect, view, parent, state);
-        //if(parent.getChildAdapterPosition(view) % 4 != 0)
-        //    outRect.left = itemOffset;
-        outRect.set(itemOffset, itemOffset, itemOffset, itemOffset);
+
+        int position = parent.getChildAdapterPosition(view);
+
+        //Horizontal space
+        if (spanCount > 1) {
+            int columnPosition = position % spanCount;
+            int nudge = Math.round((float) itemOffset / spanCount);
+
+            outRect.left = columnPosition * nudge;
+            outRect.right = (spanCount - columnPosition - 1) * nudge;
+        }
+
+        //Vertical space
+        if(position >= spanCount)
+            outRect.top = itemOffset;
     }
 }
