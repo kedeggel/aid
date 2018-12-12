@@ -3,27 +3,35 @@ package de.htwg.mobilecomputing.aid.Fragment;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import java.util.ArrayList;
 
 import de.htwg.mobilecomputing.aid.Library.ItemOffsetDecoration;
 import de.htwg.mobilecomputing.aid.Library.LibraryAdapter;
 import de.htwg.mobilecomputing.aid.Library.LibraryElement;
+import de.htwg.mobilecomputing.aid.Library.LibraryItemClickListener;
 import de.htwg.mobilecomputing.aid.R;
 
-public class LibraryFragment extends Fragment {
+//todo: Custom tool bar: https://blog.iamsuleiman.com/android-material-design-tutorial/
+
+public class LibraryFragment extends Fragment implements LibraryItemClickListener {
+    public static final String TAG = LibraryFragment.class.getSimpleName();
     //private OnFragmentInteractionListener mListener;
+
+    ArrayList<LibraryElement> elements;
 
     public static LibraryFragment newInstance() {
         LibraryFragment fragment = new LibraryFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
+        //Bundle args = new Bundle();
+        //fragment.setArguments(args);
         return fragment;
     }
 
@@ -36,10 +44,19 @@ public class LibraryFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_library, container, false);
 
+
+
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
         //Create Library
         RecyclerView library = view.findViewById(R.id.LibraryRecycler);
-        ArrayList<LibraryElement> elements = LibraryElement.generateElements(20);
-        LibraryAdapter adapter = new LibraryAdapter(elements);
+        elements = LibraryElement.generateElements(20); //todo: Populate library
+        LibraryAdapter adapter = new LibraryAdapter(elements, (LibraryItemClickListener) this);
         library.setAdapter(adapter);
         int spanCount = 4; //Number of columns in Portrait
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
@@ -49,8 +66,17 @@ public class LibraryFragment extends Fragment {
         //Add margin between library items
         ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(12, spanCount);
         library.addItemDecoration(itemDecoration);
+    }
 
-        return view;
+    @Override
+    public void onLibrarytemClickListener(int position, LibraryElement element, ImageView imageView) {
+        LibraryViewPagerFragment libraryViewPagerFragment = LibraryViewPagerFragment.newInstance(position, elements);
+
+        getFragmentManager()
+                .beginTransaction()
+                .addToBackStack(TAG)
+                .replace(R.id.fragment, libraryViewPagerFragment)
+                .commit();
     }
 
     /*@Override

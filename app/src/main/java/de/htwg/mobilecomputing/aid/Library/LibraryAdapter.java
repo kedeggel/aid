@@ -16,6 +16,7 @@ import de.htwg.mobilecomputing.aid.R;
 
 public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.ViewHolder> {
     private ArrayList<LibraryElement> elements;
+    private final LibraryItemClickListener libraryItemClickListener;
 
     // Provide a direct reference to each of the views within a data item
     // Used to cache the views within the item layout for fast access
@@ -52,8 +53,9 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.ViewHold
     }
 
     // Pass in the contact array into the constructor
-    public LibraryAdapter(ArrayList<LibraryElement> elements) {
+    public LibraryAdapter(ArrayList<LibraryElement> elements, LibraryItemClickListener libraryItemClickListener) {
         this.elements = elements;
+        this.libraryItemClickListener = libraryItemClickListener;
     }
 
     // Usually involves inflating a layout from XML and returning the holder
@@ -72,15 +74,22 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.ViewHold
 
     // Involves populating data into the item through holder
     @Override
-    public void onBindViewHolder(@NonNull LibraryAdapter.ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(@NonNull final LibraryAdapter.ViewHolder viewHolder, int position) {
         // Get the data model based on position
-        LibraryElement element = elements.get(position);
+        final LibraryElement element = elements.get(position);
 
         // Set item views based on your views and data model
         TextView label = viewHolder.label;
         label.setText(element.getLabel());
         ImageView image = viewHolder.image;
         image.setImageResource(R.drawable.sample_image2); //todo: Get image
+
+        viewHolder.image.setOnClickListener(new ImageView.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                libraryItemClickListener.onLibrarytemClickListener(viewHolder.getAdapterPosition(), element, viewHolder.image);
+            }
+        });
     }
 
     // Returns the total count of items in the list
