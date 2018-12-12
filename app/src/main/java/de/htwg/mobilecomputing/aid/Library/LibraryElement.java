@@ -1,14 +1,15 @@
 package de.htwg.mobilecomputing.aid.Library;
 
 import android.media.Image;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
-public class LibraryElement {
+public class LibraryElement implements Parcelable {
     private Image image;
     private String label;
     private Date date;
@@ -58,11 +59,21 @@ public class LibraryElement {
         return elements;
     }
 
-    public static Date parseDate(String date) {
+    private static Date parseDate(String date) {
         try {
             return new SimpleDateFormat("yyyy-MM-dd").parse(date);
         } catch (ParseException e) {
             return null;
         }
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+
     }
 }

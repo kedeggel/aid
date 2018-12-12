@@ -2,6 +2,7 @@ package de.htwg.mobilecomputing.aid.Fragment;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -17,7 +18,6 @@ import de.htwg.mobilecomputing.aid.Library.LibraryElement;
 import de.htwg.mobilecomputing.aid.R;
 
 public class LibraryFragment extends Fragment {
-    ArrayList<LibraryElement> elements;
     //private OnFragmentInteractionListener mListener;
 
     public static LibraryFragment newInstance() {
@@ -33,13 +33,12 @@ public class LibraryFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_library, container, false);
 
         //Create Library
         RecyclerView library = view.findViewById(R.id.LibraryRecycler);
-        //todo: Populate library
-        elements = LibraryElement.generateElements(20);
+        ArrayList<LibraryElement> elements = LibraryElement.generateElements(20);
         LibraryAdapter adapter = new LibraryAdapter(elements);
         library.setAdapter(adapter);
         int spanCount = 4; //Number of columns in Portrait

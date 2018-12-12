@@ -2,7 +2,6 @@ package de.htwg.mobilecomputing.aid.Library;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.widget.ImageView;
 
 public class SquareImageView extends android.support.v7.widget.AppCompatImageView {
 

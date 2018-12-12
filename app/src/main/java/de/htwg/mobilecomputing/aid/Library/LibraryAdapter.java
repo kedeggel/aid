@@ -1,6 +1,7 @@
 package de.htwg.mobilecomputing.aid.Library;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,12 +9,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import de.htwg.mobilecomputing.aid.R;
 
 public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.ViewHolder> {
-    private List<LibraryElement> elements;
+    private ArrayList<LibraryElement> elements;
 
     // Provide a direct reference to each of the views within a data item
     // Used to cache the views within the item layout for fast access
@@ -21,13 +23,13 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.ViewHold
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         // Your holder should contain a member variable
         // for any view that will be set as you render a row
-        public ImageView image;
-        public TextView label;
-        private Context context;
+        final ImageView image;
+        final TextView label;
+        private final Context context;
 
         // We also create a constructor that accepts the entire item row
         // and does the view lookups to find each subview
-        public ViewHolder(Context context, View itemView) {
+        ViewHolder(Context context, View itemView) {
             // Stores the itemView in a public final member variable that can be used
             // to access the context from any ViewHolder instance.
             super(itemView);
@@ -50,13 +52,14 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.ViewHold
     }
 
     // Pass in the contact array into the constructor
-    public LibraryAdapter(List<LibraryElement> elements) {
+    public LibraryAdapter(ArrayList<LibraryElement> elements) {
         this.elements = elements;
     }
 
     // Usually involves inflating a layout from XML and returning the holder
+    @NonNull
     @Override
-    public LibraryAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public LibraryAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
 
@@ -64,22 +67,20 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.ViewHold
         View contactView = inflater.inflate(R.layout.item_library, parent, false);
 
         // Return a new holder instance
-        ViewHolder viewHolder = new ViewHolder(context, contactView);
-        return viewHolder;
+        return new ViewHolder(context, contactView);
     }
 
     // Involves populating data into the item through holder
     @Override
-    public void onBindViewHolder(LibraryAdapter.ViewHolder viewHolder, int position) {
+    public void onBindViewHolder(@NonNull LibraryAdapter.ViewHolder viewHolder, int position) {
         // Get the data model based on position
         LibraryElement element = elements.get(position);
 
         // Set item views based on your views and data model
         TextView label = viewHolder.label;
         label.setText(element.getLabel());
-        //todo Galleriebild setzen
         ImageView image = viewHolder.image;
-        image.setImageResource(R.drawable.sample_image2);
+        image.setImageResource(R.drawable.sample_image2); //todo: Get image
     }
 
     // Returns the total count of items in the list

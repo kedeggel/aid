@@ -1,6 +1,7 @@
 package de.htwg.mobilecomputing.aid.Fragment;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,7 +33,7 @@ public class CameraFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_camera, container, false);
 
         cameraView = view.findViewById(R.id.camera_view);
@@ -44,7 +45,7 @@ public class CameraFragment extends Fragment {
         return view;
     }
 
-    private Button.OnClickListener startCameraOnClickListener = new Button.OnClickListener() {
+    private final Button.OnClickListener startCameraOnClickListener = new Button.OnClickListener() {
         @Override
         public void onClick(View view) {
             if(cameraOn) {
@@ -60,7 +61,7 @@ public class CameraFragment extends Fragment {
         }
     };
 
-    private Button.OnClickListener takePictureOnClickListener = new Button.OnClickListener() {
+    private final Button.OnClickListener takePictureOnClickListener = new Button.OnClickListener() {
         @Override
         public void onClick(View view) {
             //todo: take still image with camera and save in library
