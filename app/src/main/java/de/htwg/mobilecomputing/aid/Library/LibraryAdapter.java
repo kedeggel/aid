@@ -2,6 +2,7 @@ package de.htwg.mobilecomputing.aid.Library;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -83,6 +84,9 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.ViewHold
         label.setText(element.getLabel());
         ImageView image = viewHolder.image;
         image.setImageResource(R.drawable.sample_image2); //todo: Get image
+
+        // Set transition name same as the Image name
+        ViewCompat.setTransitionName(viewHolder.image, element.getLabel());
 
         viewHolder.image.setOnClickListener(new ImageView.OnClickListener() {
             @Override
