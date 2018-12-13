@@ -11,12 +11,14 @@ import android.view.MenuItem;
 
 import de.htwg.mobilecomputing.aid.Fragment.CameraFragment;
 import de.htwg.mobilecomputing.aid.Fragment.LibraryFragment;
+import de.htwg.mobilecomputing.aid.Fragment.SettingsFragment;
 import de.htwg.mobilecomputing.aid.R;
 
 public class MainActivity extends AppCompatActivity {
     private final FragmentManager fragmentManager = getSupportFragmentManager();
     private final Fragment camera = CameraFragment.newInstance();
     private final Fragment library = LibraryFragment.newInstance();
+    private final Fragment settings = new SettingsFragment();
 
     private FragmentTransaction fragmentTransaction;
 
@@ -40,12 +42,19 @@ public class MainActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_camera:
-                    fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.replace(R.id.fragment, camera).commit();
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.fragment, camera)
+                            .commit();
                     return true;
                 case R.id.navigation_library:
-                    fragmentTransaction = fragmentManager.beginTransaction();
-                    fragmentTransaction.replace(R.id.fragment, library).commit();
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.fragment, library)
+                            .commit();
+                    return true;
+                case R.id.navigation_settings:
+                    fragmentManager.beginTransaction()
+                            .replace(R.id.fragment, settings)
+                            .commit();
                     return true;
             }
             return false;

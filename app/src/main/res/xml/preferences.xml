@@ -1,37 +1,30 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <EditTextPreference
-        android:capitalize="words"
-        android:inputType="textCapWords"
+        android:inputType="number"
         android:key="@string/pref_key_pi_ip"
-        android:maxLines="1"
-        android:selectAllOnFocus="true"
+        android:title="@string/pref_title_pi_ip"
         android:singleLine="true"
-        android:title="@string/pref_title_pi_ip" />
+        android:selectAllOnFocus="true"
+        android:digits="0123456789."
+        android:defaultValue="127.0.0.1" />
     <EditTextPreference
-        android:capitalize="words"
-        android:defaultValue="22"
         android:inputType="number"
         android:key="@string/pref_key_pi_port"
-        android:maxLines="1"
-        android:selectAllOnFocus="true"
+        android:title="@string/pref_title_pi_port"
         android:singleLine="true"
-        android:title="@string/pref_title_pi_port" />
+        android:selectAllOnFocus="true"
+        android:defaultValue="22" />
     <EditTextPreference
-        android:capitalize="words"
-        android:inputType="textCapWords"
+        android:inputType="textNoSuggestions"
         android:key="@string/pref_key_username"
-        android:maxLines="1"
-        android:selectAllOnFocus="true"
+        android:title="@string/pref_title_username"
         android:singleLine="true"
-        android:title="@string/pref_title_username" />
+        android:selectAllOnFocus="true" />
     <EditTextPreference
-        android:capitalize="words"
         android:inputType="textPassword"
         android:key="@string/pref_key_password"
-        android:maxLines="1"
-        android:selectAllOnFocus="true"
+        android:title="@string/pref_title_password"
         android:singleLine="true"
-        android:summary="*******"
-        android:title="@string/pref_title_password" />
+        android:selectAllOnFocus="true" />
 </PreferenceScreen>

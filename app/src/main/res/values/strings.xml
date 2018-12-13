@@ -25,6 +25,7 @@
     <string name="start_camera">Camera On</string>
     <string name="stop_camera">Camera Off</string>
     <string name="take_picture">Take Picture</string>
+    <string name="settings">Settings</string>
 
 
 </resources>

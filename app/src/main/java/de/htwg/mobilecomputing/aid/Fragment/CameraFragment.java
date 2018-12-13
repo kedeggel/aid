@@ -55,7 +55,7 @@ public class CameraFragment extends Fragment {
             } else {
                 takePicture.setEnabled(true);
                 startCamera.setText(getString(R.string.stop_camera));
-                cameraView.loadUrl("https://www.google.com/");
+                cameraView.loadUrl("https://www.google.com/"); //todo: Show spinner while loading: https://stackoverflow.com/questions/11241513/android-progessbar-while-loading-webview
             }
             cameraOn = !cameraOn;
         }
