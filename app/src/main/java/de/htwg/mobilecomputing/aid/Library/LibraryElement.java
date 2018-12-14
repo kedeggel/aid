@@ -20,6 +20,10 @@ public class LibraryElement implements Parcelable {
         this.date = date;
     }
 
+    protected LibraryElement(Parcel in) {
+        label = in.readString();
+    }
+
     public Image getImage() {
         return image;
     }
@@ -51,9 +55,9 @@ public class LibraryElement implements Parcelable {
             count++;
             Date date;
             if(count % 2 == 0)
-                date = parseDate("2018-12-" + (count % 24));
+                date = parseDate("2018-12-" + (count % 24) + " 01:00:00");
             else
-                date = parseDate("2018-12-" + ((count - 1) % 24));
+                date = parseDate("2018-12-" + ((count - 1) % 24) + " 01:00:00");
             elements.add(new LibraryElement(null, "Image " + count, date));
         }
         return elements;
@@ -61,7 +65,7 @@ public class LibraryElement implements Parcelable {
 
     private static Date parseDate(String date) {
         try {
-            return new SimpleDateFormat("yyyy-MM-dd").parse(date);
+            return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(date);
         } catch (ParseException e) {
             return null;
         }
@@ -74,6 +78,18 @@ public class LibraryElement implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-
+        dest.writeString(label);
     }
+
+    public static final Creator<LibraryElement> CREATOR = new Creator<LibraryElement>() {
+        @Override
+        public LibraryElement createFromParcel(Parcel in) {
+            return new LibraryElement(in);
+        }
+
+        @Override
+        public LibraryElement[] newArray(int size) {
+            return new LibraryElement[size];
+        }
+    };
 }

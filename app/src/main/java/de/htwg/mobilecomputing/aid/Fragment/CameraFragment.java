@@ -1,6 +1,8 @@
 package de.htwg.mobilecomputing.aid.Fragment;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -55,7 +57,9 @@ public class CameraFragment extends Fragment {
             } else {
                 takePicture.setEnabled(true);
                 startCamera.setText(getString(R.string.stop_camera));
-                cameraView.loadUrl("https://www.google.com/"); //todo: Show spinner while loading: https://stackoverflow.com/questions/11241513/android-progessbar-while-loading-webview
+                SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getContext());
+                cameraView.loadUrl(sp.getString("ipKey", "127.0.0.1") + ":" + sp.getString("portKey", "22"));
+                //todo: Show spinner while loading: https://stackoverflow.com/questions/11241513/android-progessbar-while-loading-webview
             }
             cameraOn = !cameraOn;
         }

@@ -11,7 +11,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import de.htwg.mobilecomputing.aid.R;
 
@@ -19,37 +18,17 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.ViewHold
     private ArrayList<LibraryElement> elements;
     private final LibraryItemClickListener libraryItemClickListener;
 
-    // Provide a direct reference to each of the views within a data item
-    // Used to cache the views within the item layout for fast access
     // todo group items by date: https://stackoverflow.com/questions/34848401/divide-elements-on-groups-in-recyclerview
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        // Your holder should contain a member variable
-        // for any view that will be set as you render a row
+    public class ViewHolder extends RecyclerView.ViewHolder {
         final ImageView image;
         final TextView label;
         private final Context context;
 
-        // We also create a constructor that accepts the entire item row
-        // and does the view lookups to find each subview
         ViewHolder(Context context, View itemView) {
-            // Stores the itemView in a public final member variable that can be used
-            // to access the context from any ViewHolder instance.
             super(itemView);
             this.context = context;
             image = itemView.findViewById(R.id.item_library_image);
             label = itemView.findViewById(R.id.item_library_label);
-            itemView.setOnClickListener(this);
-        }
-
-        // Handles the row being clicked
-        @Override
-        public void onClick(View view) {
-            int position = getAdapterPosition(); // gets item position
-            if (position != RecyclerView.NO_POSITION) { // Check if an item was deleted, but the user clicked it before the UI removed it
-                LibraryElement element = elements.get(position);
-
-                //todo: Open selected image
-            }
         }
     }
 
@@ -59,7 +38,6 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.ViewHold
         this.libraryItemClickListener = libraryItemClickListener;
     }
 
-    // Usually involves inflating a layout from XML and returning the holder
     @NonNull
     @Override
     public LibraryAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

@@ -81,6 +81,8 @@ public class LibraryFragment extends Fragment implements LibraryItemClickListene
                 .commit();
     }
 
+
+
     /*@Override
     public void onAttach(Context context) {
         super.onAttach(context);
