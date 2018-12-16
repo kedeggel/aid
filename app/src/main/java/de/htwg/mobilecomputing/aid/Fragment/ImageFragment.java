@@ -49,10 +49,16 @@ public class ImageFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_image, container, false);
+
+        //Enter fullsceen mode in landscape orientation
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            view.setBackgroundColor(0xFF000000); //Set background color to black
+            //Hide Status Bar, Action Bar and Navigation Bar
+            getActivity().getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
             ((AppCompatActivity)getActivity()).getSupportActionBar().hide();
             getActivity().findViewById(R.id.navigation).setVisibility(View.GONE);
         }
+
         return view;
     }
 

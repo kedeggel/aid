@@ -6,12 +6,6 @@
     android:orientation="vertical"
     style="@style/Dialog">
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/camera"
-        style="@style/Header"/>
-
     <WebView
         android:id="@+id/camera_view"
         android:layout_width="match_parent"

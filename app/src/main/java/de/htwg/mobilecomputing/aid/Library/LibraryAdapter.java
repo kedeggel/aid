@@ -21,14 +21,14 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.ViewHold
     // todo group items by date: https://stackoverflow.com/questions/34848401/divide-elements-on-groups-in-recyclerview
     public class ViewHolder extends RecyclerView.ViewHolder {
         final ImageView image;
-        final TextView label;
+        //final TextView label;
         private final Context context;
 
         ViewHolder(Context context, View itemView) {
             super(itemView);
             this.context = context;
             image = itemView.findViewById(R.id.item_library_image);
-            label = itemView.findViewById(R.id.item_library_label);
+            //label = itemView.findViewById(R.id.item_library_label);
         }
     }
 
@@ -58,8 +58,8 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.ViewHold
         final LibraryElement element = elements.get(position);
 
         // Set item views based on your views and data model
-        TextView label = viewHolder.label;
-        label.setText(element.getLabel());
+        //TextView label = viewHolder.label;
+        //label.setText(element.getLabel());
         ImageView image = viewHolder.image;
         image.setImageResource(R.drawable.sample_image2); //todo: Get image
 

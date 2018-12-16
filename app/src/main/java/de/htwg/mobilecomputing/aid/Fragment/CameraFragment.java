@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +38,7 @@ public class CameraFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_camera, container, false);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(getString(R.string.camera));
 
         cameraView = view.findViewById(R.id.camera_view);
         startCamera = view.findViewById(R.id.button_start_camera);
@@ -68,7 +70,7 @@ public class CameraFragment extends Fragment {
     private final Button.OnClickListener takePictureOnClickListener = new Button.OnClickListener() {
         @Override
         public void onClick(View view) {
-            //todo: take still image with camera and save in library
+            //todo: take still image with camera and save in library: https://stackoverflow.com/questions/9745988/how-can-i-programmatically-take-a-screenshot-of-a-webview-capturing-the-full-pa
         }
     };
 

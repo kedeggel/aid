@@ -2,8 +2,10 @@ package de.htwg.mobilecomputing.aid.Fragment;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.EditTextPreference;
 import android.support.v7.preference.Preference;
+import android.view.View;
 
 import com.takisoft.fix.support.v7.preference.PreferenceFragmentCompat;
 
@@ -17,6 +19,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     @Override
     public void onCreatePreferencesFix(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.preferences, rootKey);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(getString(R.string.settings));
     }
 
     @Override
@@ -30,6 +33,9 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         for(Map.Entry<String, ?> entry : sharedPreferences.getAll().entrySet()) {
             updatePreferenceSummary(findPreference(entry.getKey()));
         }
+
+        //hide navigation bar
+        getActivity().findViewById(R.id.navigation).setVisibility(View.GONE);
     }
 
     @Override
