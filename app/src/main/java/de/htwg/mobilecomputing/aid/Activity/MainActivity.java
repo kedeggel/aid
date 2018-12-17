@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     private final Fragment settings = new SettingsFragment();
 
     private FragmentTransaction fragmentTransaction;
+    private Menu menu;
     private BottomNavigationView navigation;
 
     @Override
@@ -50,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.toolbar_main, menu);
+        this.menu = menu;
         return true;
     }
 
@@ -62,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
                         .addToBackStack(TAG)
                         .replace(R.id.fragment, settings)
                         .commit();
+                item.setVisible(false);
                 return true;
 
             case R.id.action_share:
@@ -79,9 +82,10 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
 
-        //Show UI elements hidden in ImageFragment Landscape Orientation
+        //Show UI elements hidden in ImageFragment Landscape Orientation and Settings Menu
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
         getSupportActionBar().show();
+        menu.findItem(R.id.action_settings).setVisible(true);
         navigation.setVisibility(View.VISIBLE);
     }
 

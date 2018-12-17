@@ -7,7 +7,7 @@
     </style>
 
     <style name="toolbar" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
-        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorPrimary">@color/colorPrimaryLight</item>
     </style>
 
     <style name="Dialog">

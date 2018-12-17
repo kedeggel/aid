@@ -6,11 +6,24 @@
     android:orientation="vertical"
     style="@style/Dialog">
 
-    <WebView
-        android:id="@+id/camera_view"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        style="@style/Object"/>
+        style="@style/Object">
+
+        <WebView
+            android:id="@+id/camera_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone"/>
+
+    </FrameLayout>
 
     <Button
         android:id="@+id/button_start_camera"

@@ -1,6 +1,8 @@
 package de.htwg.mobilecomputing.aid.Fragment;
 
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.Camera;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -10,14 +12,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.ProgressBar;
 
+import de.htwg.mobilecomputing.aid.Camera.CameraWebView;
 import de.htwg.mobilecomputing.aid.R;
 
 public class CameraFragment extends Fragment {
     private WebView cameraView;
     private Button startCamera;
     private Button takePicture;
+    private ProgressBar progressBar;
 
     private boolean cameraOn = false;
 
@@ -45,6 +51,7 @@ public class CameraFragment extends Fragment {
         startCamera.setOnClickListener(startCameraOnClickListener);
         takePicture = view.findViewById(R.id.button_take_picture);
         takePicture.setOnClickListener(takePictureOnClickListener);
+        progressBar = view.findViewById(R.id.progress_bar);
 
         return view;
     }
@@ -56,14 +63,27 @@ public class CameraFragment extends Fragment {
                 takePicture.setEnabled(false);
                 startCamera.setText(getString(R.string.start_camera));
                 cameraView.loadUrl("about:blank");
+                progressBar.setVisibility(View.GONE);
             } else {
                 takePicture.setEnabled(true);
                 startCamera.setText(getString(R.string.stop_camera));
                 SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getContext());
+                cameraView.setWebViewClient(webViewClient);
                 cameraView.loadUrl(sp.getString("ipKey", "127.0.0.1") + ":" + sp.getString("portKey", "22"));
                 //todo: Show spinner while loading: https://stackoverflow.com/questions/11241513/android-progessbar-while-loading-webview
             }
             cameraOn = !cameraOn;
+        }
+    };
+
+    private final WebViewClient webViewClient = new WebViewClient() {
+        @Override
+        public void onPageStarted(WebView view, String url, Bitmap favicon) {
+            progressBar.setVisibility(View.VISIBLE);
+        }
+        @Override
+        public void onPageFinished(WebView view, String url) {
+            progressBar.setVisibility(View.GONE);
         }
     };
 
