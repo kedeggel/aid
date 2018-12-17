@@ -7,9 +7,18 @@
     style="@style/Dialog">
 
     <FrameLayout
+        android:id="@+id/camera_frame"
         android:layout_width="match_parent"
         android:layout_height="200dp"
         style="@style/Object">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="CAMERA OFF"
+            android:textSize="20dp"
+            android:textColor="@color/colorPrimaryDark"
+            android:gravity="center"/>
 
         <WebView
             android:id="@+id/camera_view"

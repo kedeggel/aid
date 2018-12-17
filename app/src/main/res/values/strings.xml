@@ -29,6 +29,8 @@
     <string name="date_taken">Date taken</string>
     <string name="Share">Share</string>
     <string name="home">Home</string>
-
+    <string name="default_description">This picture was captured with the Automated Intrusion Detection app</string>
+    <string name="error_general">An unknown error occured</string>
+    <string name="success_image_saved">Image saved to Gallery</string>
 
 </resources>

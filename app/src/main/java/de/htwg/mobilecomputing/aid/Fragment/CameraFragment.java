@@ -1,31 +1,47 @@
 package de.htwg.mobilecomputing.aid.Fragment;
 
+import android.Manifest;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Camera;
+import android.graphics.Canvas;
+import android.graphics.Picture;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
+
+import java.io.FileOutputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import de.htwg.mobilecomputing.aid.Camera.CameraWebView;
+import de.htwg.mobilecomputing.aid.Camera.CapturePhotoUtils;
 import de.htwg.mobilecomputing.aid.R;
 
 public class CameraFragment extends Fragment {
     private WebView cameraView;
     private Button startCamera;
     private Button takePicture;
-    private ProgressBar progressBar;
+    //private ProgressBar progressBar;
 
-    private boolean cameraOn = false;
+    private static boolean cameraOn = false;
 
     //private OnFragmentInteractionListener mListener;
 
@@ -47,50 +63,96 @@ public class CameraFragment extends Fragment {
         ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(getString(R.string.camera));
 
         cameraView = view.findViewById(R.id.camera_view);
+
+        //set height of camera view to fit 16:9
+        FrameLayout cameraFrame = view.findViewById(R.id.camera_frame);
+        cameraFrame.post(new Runnable() {
+            @Override
+            public void run() {
+                int height = (int)(Math.ceil((cameraFrame.getWidth() / 16.0) * 9));
+                ViewGroup.LayoutParams params = cameraFrame.getLayoutParams();
+                params.height = height;
+                cameraFrame.setLayoutParams(params);
+            }
+        });
+
         startCamera = view.findViewById(R.id.button_start_camera);
         startCamera.setOnClickListener(startCameraOnClickListener);
+
         takePicture = view.findViewById(R.id.button_take_picture);
         takePicture.setOnClickListener(takePictureOnClickListener);
-        progressBar = view.findViewById(R.id.progress_bar);
+
+        //progressBar = view.findViewById(R.id.progress_bar);
+
+        setCamera();
 
         return view;
+    }
+
+    //todo: Remove if unnecessary
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState)  {
+        super.onViewCreated(view, savedInstanceState);
+
     }
 
     private final Button.OnClickListener startCameraOnClickListener = new Button.OnClickListener() {
         @Override
         public void onClick(View view) {
-            if(cameraOn) {
-                takePicture.setEnabled(false);
-                startCamera.setText(getString(R.string.start_camera));
-                cameraView.loadUrl("about:blank");
-                progressBar.setVisibility(View.GONE);
-            } else {
-                takePicture.setEnabled(true);
-                startCamera.setText(getString(R.string.stop_camera));
-                SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getContext());
-                cameraView.setWebViewClient(webViewClient);
-                cameraView.loadUrl(sp.getString("ipKey", "127.0.0.1") + ":" + sp.getString("portKey", "22"));
-                //todo: Show spinner while loading: https://stackoverflow.com/questions/11241513/android-progessbar-while-loading-webview
-            }
             cameraOn = !cameraOn;
+            setCamera();
         }
     };
 
+    private void setCamera() {
+        if(cameraOn) {
+            takePicture.setEnabled(true);
+            startCamera.setText(getString(R.string.stop_camera));
+            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getContext());
+            cameraView.setVisibility(View.VISIBLE);
+            cameraView.setWebViewClient(webViewClient);
+            cameraView.getSettings().setLoadWithOverviewMode(true);
+            cameraView.getSettings().setUseWideViewPort(true);
+            String url = "http://" + sp.getString("ipKey", "127.0.0.1") + ":" + sp.getString("portKey", "22");
+            cameraView.loadUrl(url);
+        } else {
+            takePicture.setEnabled(false);
+            startCamera.setText(getString(R.string.start_camera));
+            cameraView.setVisibility(View.GONE);
+            cameraView.loadUrl("about:blank");
+            //progressBar.setVisibility(View.GONE);
+        }
+    }
+
     private final WebViewClient webViewClient = new WebViewClient() {
-        @Override
+        //todo: Show spinner while loading: https://stackoverflow.com/questions/11241513/android-progessbar-while-loading-webview
+        /*@Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             progressBar.setVisibility(View.VISIBLE);
         }
         @Override
         public void onPageFinished(WebView view, String url) {
             progressBar.setVisibility(View.GONE);
-        }
+        }*/
     };
 
     private final Button.OnClickListener takePictureOnClickListener = new Button.OnClickListener() {
         @Override
         public void onClick(View view) {
             //todo: take still image with camera and save in library: https://stackoverflow.com/questions/9745988/how-can-i-programmatically-take-a-screenshot-of-a-webview-capturing-the-full-pa
+            Picture picture = cameraView.capturePicture();
+            Bitmap b = Bitmap.createBitmap(picture.getWidth(), picture.getHeight(), Bitmap.Config.ARGB_8888);
+            Canvas c = new Canvas(b);
+            picture.draw(c);
+            if(ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
+                ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
+            String result = CapturePhotoUtils.insertImage(getActivity().getContentResolver(), b, "AID_" + df.format(new Date()), getString(R.string.default_description));
+            if(result != null) {
+                Toast.makeText(getActivity(), getString(R.string.success_image_saved), Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(getActivity(), getString(R.string.error_general), Toast.LENGTH_LONG).show();
+            }
         }
     };
 
