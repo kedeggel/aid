@@ -145,7 +145,6 @@ public class CameraFragment extends Fragment {
     }
 
     private final WebViewClient webViewClient = new WebViewClient() {
-        //todo: Show spinner while loading: https://stackoverflow.com/questions/11241513/android-progessbar-while-loading-webview
         /*@Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
 
@@ -167,7 +166,14 @@ public class CameraFragment extends Fragment {
         }
         @Override
         public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error)  {
-            Toast.makeText(getActivity(), error.getErrorCode() + ": " + error.getDescription(), Toast.LENGTH_LONG).show();
+            switch(error.getErrorCode()) {
+                case -1: //too many requests
+                case -6: //connection refused
+                    Toast.makeText(getActivity(), getString(R.string.error_time_out), Toast.LENGTH_LONG).show();
+                    break;
+                default:
+                    Toast.makeText(getActivity(), error.getErrorCode() + ": " + error.getDescription(), Toast.LENGTH_LONG).show();
+            }
             setCamera(false);
         }
         @Override
@@ -183,19 +189,27 @@ public class CameraFragment extends Fragment {
     private final Button.OnClickListener takePictureOnClickListener = new Button.OnClickListener() {
         @Override
         public void onClick(View view) {
-            //todo: take still image with camera and save in library: https://stackoverflow.com/questions/9745988/how-can-i-programmatically-take-a-screenshot-of-a-webview-capturing-the-full-pa
-            Picture picture = cameraView.capturePicture();
-            Bitmap b = Bitmap.createBitmap(picture.getWidth(), picture.getHeight(), Bitmap.Config.ARGB_8888);
-            Canvas c = new Canvas(b);
-            picture.draw(c);
+            //Check for writing permission
             if(ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)
                 ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-            DateFormat df = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
-            String result = CapturePhotoUtils.insertImage(getActivity().getContentResolver(), b, "AID_" + df.format(new Date()), getString(R.string.default_description));
-            if(result != null) {
-                Toast.makeText(getActivity(), getString(R.string.success_image_saved), Toast.LENGTH_LONG).show();
-            } else {
-                Toast.makeText(getActivity(), getString(R.string.error_general), Toast.LENGTH_LONG).show();
+            else {
+                //Capture bitmap
+                /*Picture picture = cameraView.capturePicture();
+                Bitmap b = Bitmap.createBitmap(picture.getWidth(), picture.getHeight(), Bitmap.Config.ARGB_8888);
+                Canvas c = new Canvas(b);
+                picture.draw(c);*/
+                Bitmap b = Bitmap.createBitmap(cameraView.getWidth(), cameraView.getHeight(), Bitmap.Config.ARGB_8888);
+                Canvas c = new Canvas(b);
+                cameraView.draw(c);
+
+                //Save bitmap to phone gallery
+                DateFormat df = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
+                String result = CapturePhotoUtils.insertImage(getActivity().getContentResolver(), b, "AID_" + df.format(new Date()), getString(R.string.default_description));
+                if (result != null) {
+                    Toast.makeText(getActivity(), getString(R.string.success_image_saved), Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getActivity(), getString(R.string.error_general), Toast.LENGTH_LONG).show();
+                }
             }
         }
     };

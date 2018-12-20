@@ -10,15 +10,12 @@
         android:id="@+id/camera_frame"
         android:layout_width="match_parent"
         android:layout_height="200dp"
+        android:background="@drawable/border"
         style="@style/Object">
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="CAMERA OFF"
-            android:textSize="20dp"
-            android:textColor="@color/colorPrimaryDark"
-            android:gravity="center"/>
+            android:text="@string/annotation_camera_off"
+            style="@style/Annotation"/>
 
         <WebView
             android:id="@+id/camera_view"

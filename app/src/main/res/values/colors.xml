@@ -5,4 +5,5 @@
     <!--<color name="colorAccent">#FFD700</color>-->
     <color name="colorAccent">#ffaa00</color>
     <color name="colorPrimaryLight">#fafafa</color>
+    <color name="lightGrey">#c1c1c1</color>
 </resources>

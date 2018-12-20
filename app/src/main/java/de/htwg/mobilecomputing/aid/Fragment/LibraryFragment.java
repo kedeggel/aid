@@ -16,6 +16,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
@@ -38,6 +41,8 @@ public class LibraryFragment extends Fragment implements LibraryItemClickListene
 
     private SharedPreferences sp;
     private ArrayList<LibraryElement> elements;
+    private ProgressBar progressBar;
+    private TextView annotation;
 
     public static LibraryFragment newInstance() {
         LibraryFragment fragment = new LibraryFragment();
@@ -47,15 +52,13 @@ public class LibraryFragment extends Fragment implements LibraryItemClickListene
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_library, container, false);
         ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(getString(R.string.library));
         sp = PreferenceManager.getDefaultSharedPreferences(getContext());
+        progressBar = view.findViewById(R.id.progress_bar);
+        annotation = view.findViewById(R.id.annotation);
+        annotation.setVisibility(View.GONE);
         return view;
     }
 
@@ -63,23 +66,31 @@ public class LibraryFragment extends Fragment implements LibraryItemClickListene
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        //Create Library
-        RecyclerView library = view.findViewById(R.id.LibraryRecycler);
-        elements = LibraryElement.generateElements(20); //todo: Populate library
-
         HttpUtils.setIp(sp.getString("ipKey", null));
         RestCalls.getAllDocs(new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                //todo: response body parsen
+                //Populate elements
+                // todo: parse response body
+                elements = LibraryElement.generateElements(20); //todo: Populate library
+                inflateLibrary(view);
+                progressBar.setVisibility(View.GONE);
+
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                //todo: Ip falsch
+                Toast.makeText(getActivity(), getString(R.string.error_time_out), Toast.LENGTH_LONG).show();
+                //elements = new ArrayList<>();
+                progressBar.setVisibility(View.GONE);
+                annotation.setVisibility(View.VISIBLE);
             }
         });
+    }
 
+    private void inflateLibrary(View view) {
+        //Inflate library
+        RecyclerView library = view.findViewById(R.id.LibraryRecycler);
         LibraryAdapter adapter = new LibraryAdapter(elements, (LibraryItemClickListener) this);
         library.setAdapter(adapter);
         int spanCount = 4; //Number of columns in Portrait
