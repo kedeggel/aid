@@ -27,4 +27,9 @@
         android:title="@string/pref_title_password"
         android:singleLine="true"
         android:selectAllOnFocus="true" />
+    <ListPreference
+        android:key="aspectRatio"
+        android:title="Aspect Ratio"
+        android:entries="@array/aspect_ratios"
+        android:entryValues="@array/aspect_ratios"/>
 </PreferenceScreen>

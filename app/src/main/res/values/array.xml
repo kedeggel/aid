@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="aspect_ratios">
+        <item>4:3</item>
+        <item>16:9</item>
+        <item>16:10</item>
+    </string-array>
+</resources>

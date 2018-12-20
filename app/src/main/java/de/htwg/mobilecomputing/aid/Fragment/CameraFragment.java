@@ -36,6 +36,7 @@ import de.htwg.mobilecomputing.aid.Camera.CapturePhotoUtils;
 import de.htwg.mobilecomputing.aid.R;
 
 public class CameraFragment extends Fragment {
+    private SharedPreferences sp;
     private WebView cameraView;
     private Button startCamera;
     private Button takePicture;
@@ -62,6 +63,8 @@ public class CameraFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_camera, container, false);
         ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(getString(R.string.camera));
 
+        sp = PreferenceManager.getDefaultSharedPreferences(getContext());
+
         cameraView = view.findViewById(R.id.camera_view);
 
         //set height of camera view to fit 16:9
@@ -69,7 +72,10 @@ public class CameraFragment extends Fragment {
         cameraFrame.post(new Runnable() {
             @Override
             public void run() {
-                int height = (int)(Math.ceil((cameraFrame.getWidth() / 16.0) * 9));
+                String aspectRatio = sp.getString("aspectRatio", "4:3");
+                double a = Double.parseDouble(aspectRatio.substring(0, aspectRatio.indexOf(':')));
+                int b = Integer.parseInt(aspectRatio.substring(aspectRatio.indexOf(':')+1, aspectRatio.length()));
+                int height = (int)(Math.ceil((cameraFrame.getWidth() / a) * b));
                 ViewGroup.LayoutParams params = cameraFrame.getLayoutParams();
                 params.height = height;
                 cameraFrame.setLayoutParams(params);
@@ -108,7 +114,6 @@ public class CameraFragment extends Fragment {
         if(cameraOn) {
             takePicture.setEnabled(true);
             startCamera.setText(getString(R.string.stop_camera));
-            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getContext());
             cameraView.setVisibility(View.VISIBLE);
             cameraView.setWebViewClient(webViewClient);
             cameraView.getSettings().setLoadWithOverviewMode(true);

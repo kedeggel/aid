@@ -4,11 +4,13 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.EditTextPreference;
+import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.Preference;
 import android.view.View;
 
 import com.takisoft.fix.support.v7.preference.PreferenceFragmentCompat;
 
+import java.util.List;
 import java.util.Map;
 
 import de.htwg.mobilecomputing.aid.R;
@@ -19,7 +21,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     @Override
     public void onCreatePreferencesFix(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.preferences, rootKey);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(getString(R.string.settings));
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(getString(R.string.settings));
     }
 
     @Override
@@ -30,7 +32,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
-        for(Map.Entry<String, ?> entry : sharedPreferences.getAll().entrySet()) {
+        for (Map.Entry<String, ?> entry : sharedPreferences.getAll().entrySet()) {
             updatePreferenceSummary(findPreference(entry.getKey()));
         }
 
@@ -50,10 +52,14 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     }
 
     private void updatePreferenceSummary(Preference preference) {
-        if(preference != null && preference instanceof EditTextPreference) {
-            String newValue = ((EditTextPreference) preference).getText();
+        if (preference != null) {
+            String newValue = "";
             if (preference.getKey().toLowerCase().contains("password"))
                 newValue = newValue.replaceAll(".", "*");
+            else if (preference instanceof EditTextPreference)
+                newValue = ((EditTextPreference) preference).getText();
+            else if(preference instanceof ListPreference)
+                newValue = ((ListPreference) preference).getValue();
             preference.setSummary(newValue);
         }
     }
