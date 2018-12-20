@@ -32,5 +32,8 @@
     <string name="default_description">This picture was captured with the Automated Intrusion Detection app</string>
     <string name="error_general">An unknown error occured</string>
     <string name="success_image_saved">Image saved to Gallery</string>
+    <string name="error_login_credentials">Username or Password incorrect</string>
+    <string name="error_internet_connection">Phone not connected to the internet</string>
+    <string name="error_time_out">Connection timed out. Check your ip and port settings.</string>
 
 </resources>

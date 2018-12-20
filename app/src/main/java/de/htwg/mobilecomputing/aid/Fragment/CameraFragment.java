@@ -1,12 +1,15 @@
 package de.htwg.mobilecomputing.aid.Fragment;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Camera;
 import android.graphics.Canvas;
 import android.graphics.Picture;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -18,6 +21,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.HttpAuthHandler;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceRequest;
+import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
@@ -40,7 +47,7 @@ public class CameraFragment extends Fragment {
     private WebView cameraView;
     private Button startCamera;
     private Button takePicture;
-    //private ProgressBar progressBar;
+    private ProgressBar progressBar;
 
     private static boolean cameraOn = false;
 
@@ -67,7 +74,7 @@ public class CameraFragment extends Fragment {
 
         cameraView = view.findViewById(R.id.camera_view);
 
-        //set height of camera view to fit 16:9
+        //set height of camera view to correct aspect ratio
         FrameLayout cameraFrame = view.findViewById(R.id.camera_frame);
         cameraFrame.post(new Runnable() {
             @Override
@@ -88,7 +95,7 @@ public class CameraFragment extends Fragment {
         takePicture = view.findViewById(R.id.button_take_picture);
         takePicture.setOnClickListener(takePictureOnClickListener);
 
-        //progressBar = view.findViewById(R.id.progress_bar);
+        progressBar = view.findViewById(R.id.progress_bar);
 
         setCamera();
 
@@ -105,8 +112,11 @@ public class CameraFragment extends Fragment {
     private final Button.OnClickListener startCameraOnClickListener = new Button.OnClickListener() {
         @Override
         public void onClick(View view) {
-            cameraOn = !cameraOn;
-            setCamera();
+            if(isNetworkAvailable()) {
+                cameraOn = !cameraOn;
+                setCamera();
+            } else
+                Toast.makeText(getActivity(), getString(R.string.error_internet_connection), Toast.LENGTH_LONG).show();
         }
     };
 
@@ -129,13 +139,42 @@ public class CameraFragment extends Fragment {
         }
     }
 
+    private void setCamera(boolean on) {
+        cameraOn = on;
+        setCamera();
+    }
+
     private final WebViewClient webViewClient = new WebViewClient() {
         //todo: Show spinner while loading: https://stackoverflow.com/questions/11241513/android-progessbar-while-loading-webview
         /*@Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
-            progressBar.setVisibility(View.VISIBLE);
+
+        }*/
+        @Override
+        public void onReceivedHttpError(WebView view, WebResourceRequest request, WebResourceResponse errorResponse) {
+            super.onReceivedHttpError(view, request, errorResponse);
+            switch(errorResponse.getStatusCode()) {
+                case 401:
+                    Toast.makeText(getActivity(), getString(R.string.error_login_credentials), Toast.LENGTH_LONG).show();
+                    break;
+                case 408:
+                    Toast.makeText(getActivity(), getString(R.string.error_time_out), Toast.LENGTH_LONG).show();
+                    break;
+                default:
+                    Toast.makeText(getActivity(), "HTTP Error " + errorResponse.getStatusCode(), Toast.LENGTH_LONG).show();
+            }
+            setCamera(false);
         }
         @Override
+        public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error)  {
+            Toast.makeText(getActivity(), error.getErrorCode() + ": " + error.getDescription(), Toast.LENGTH_LONG).show();
+            setCamera(false);
+        }
+        @Override
+        public void onReceivedHttpAuthRequest(WebView view, HttpAuthHandler handler, String host, String realm) {
+            handler.proceed(sp.getString("usernameKey", ""), sp.getString("passwordKey", ""));
+        }
+        /*@Override
         public void onPageFinished(WebView view, String url) {
             progressBar.setVisibility(View.GONE);
         }*/
@@ -160,6 +199,12 @@ public class CameraFragment extends Fragment {
             }
         }
     };
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager = (ConnectivityManager)getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
 
     /*@Override
     public void onAttach(Context context) {

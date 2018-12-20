@@ -1,7 +1,9 @@
 package de.htwg.mobilecomputing.aid.Fragment;
 
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -9,18 +11,24 @@ import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.loopj.android.http.AsyncHttpResponseHandler;
+
 import java.util.ArrayList;
 
+import cz.msebera.android.httpclient.Header;
 import de.htwg.mobilecomputing.aid.Library.ItemOffsetDecoration;
 import de.htwg.mobilecomputing.aid.Library.LibraryAdapter;
 import de.htwg.mobilecomputing.aid.Library.LibraryElement;
 import de.htwg.mobilecomputing.aid.Library.LibraryItemClickListener;
 import de.htwg.mobilecomputing.aid.R;
+import de.htwg.mobilecomputing.aid.Rest.HttpUtils;
+import de.htwg.mobilecomputing.aid.Rest.RestCalls;
 
 //todo: Custom tool bar: https://blog.iamsuleiman.com/android-material-design-tutorial/
 
@@ -28,7 +36,8 @@ public class LibraryFragment extends Fragment implements LibraryItemClickListene
     public static final String TAG = LibraryFragment.class.getSimpleName();
     //private OnFragmentInteractionListener mListener;
 
-    ArrayList<LibraryElement> elements;
+    private SharedPreferences sp;
+    private ArrayList<LibraryElement> elements;
 
     public static LibraryFragment newInstance() {
         LibraryFragment fragment = new LibraryFragment();
@@ -46,7 +55,7 @@ public class LibraryFragment extends Fragment implements LibraryItemClickListene
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_library, container, false);
         ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(getString(R.string.library));
-
+        sp = PreferenceManager.getDefaultSharedPreferences(getContext());
         return view;
     }
 
@@ -57,6 +66,20 @@ public class LibraryFragment extends Fragment implements LibraryItemClickListene
         //Create Library
         RecyclerView library = view.findViewById(R.id.LibraryRecycler);
         elements = LibraryElement.generateElements(20); //todo: Populate library
+
+        HttpUtils.setIp(sp.getString("ipKey", null));
+        RestCalls.getAllDocs(new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                //todo: response body parsen
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                //todo: Ip falsch
+            }
+        });
+
         LibraryAdapter adapter = new LibraryAdapter(elements, (LibraryItemClickListener) this);
         library.setAdapter(adapter);
         int spanCount = 4; //Number of columns in Portrait
