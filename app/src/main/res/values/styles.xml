@@ -1,13 +1,23 @@
 <resources>
 
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="toolbar" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+    <style name="ActivityActionBar" parent="AppTheme">
+
+    </style>
+
+    <style name="ActivityNoActionBar" parent="AppTheme">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="toolbar" parent="@style/Widget.AppCompat.ActionBar">
         <item name="android:textColorPrimary">@color/colorPrimaryLight</item>
+        <item name="android:background">@color/colorPrimary</item>
     </style>
 
     <style name="Dialog">
@@ -15,7 +25,7 @@
         <item name="android:layout_marginRight">10dp</item>
     </style>
 
-    <style name="Object" >
+    <style name="Object">
         <item name="android:layout_marginTop">10dp</item>
     </style>
 

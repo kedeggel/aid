@@ -7,7 +7,7 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
 public class HttpUtils {
-    private static String baseUrl = null;
+    public static String baseUrl = null;
     private static AsyncHttpClient client = new AsyncHttpClient();
 
     public static void setIp(String ip) {
@@ -15,6 +15,7 @@ public class HttpUtils {
     }
 
     public static void get(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+        Log.d("asdf", getAbsoluteUrl(url));
         client.get(getAbsoluteUrl(url), params, responseHandler);
     }
 

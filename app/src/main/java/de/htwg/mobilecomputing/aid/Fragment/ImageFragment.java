@@ -27,7 +27,7 @@ public class ImageFragment extends Fragment {
         ImageFragment fragment = new ImageFragment();
         Bundle args = new Bundle();
         args.putParcelable(EXTRA_IMAGE, element);
-        args.putString(EXTRA_TRANSITION_NAME, element.getLabel());
+        args.putString(EXTRA_TRANSITION_NAME, element.getId());
         fragment.setArguments(args);
         return fragment;
     }
@@ -71,10 +71,10 @@ public class ImageFragment extends Fragment {
         final TextView labelView = view.findViewById(R.id.detail_label);
         final TextView dateView = view.findViewById(R.id.detail_date);
 
-        imageView.setImageResource(R.drawable.sample_image2); //todo: Set actual image from library element
-        labelView.setText(element.getLabel());
+        imageView.setImageBitmap(element.getImage());
+        //labelView.setText(element.getLabel());
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        dateView.setText(getString(R.string.date_taken) + ": " + dateFormat.format(element.getDate()));
+        //dateView.setText(getString(R.string.date_taken) + ": " + dateFormat.format(element.getDate()));
 
         String transitionName = getArguments().getString(EXTRA_TRANSITION_NAME);
 

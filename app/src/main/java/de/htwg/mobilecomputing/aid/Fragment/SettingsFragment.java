@@ -21,7 +21,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
     @Override
     public void onCreatePreferencesFix(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.preferences, rootKey);
-        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(getString(R.string.settings));
+        //((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(getString(R.string.settings));
     }
 
     @Override
@@ -29,7 +29,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         super.onResume();
 
         sharedPreferences = getPreferenceManager().getSharedPreferences();
-
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
         for (Map.Entry<String, ?> entry : sharedPreferences.getAll().entrySet()) {
@@ -37,7 +36,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         }
 
         //hide navigation bar
-        getActivity().findViewById(R.id.navigation).setVisibility(View.GONE);
+        //getActivity().findViewById(R.id.navigation).setVisibility(View.GONE);
     }
 
     @Override

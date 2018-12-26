@@ -2,6 +2,8 @@ package de.htwg.mobilecomputing.aid.Fragment;
 
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -20,9 +22,17 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
+import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.Set;
 
 import cz.msebera.android.httpclient.Header;
 import de.htwg.mobilecomputing.aid.Library.ItemOffsetDecoration;
@@ -33,13 +43,12 @@ import de.htwg.mobilecomputing.aid.R;
 import de.htwg.mobilecomputing.aid.Rest.HttpUtils;
 import de.htwg.mobilecomputing.aid.Rest.RestCalls;
 
-//todo: Custom tool bar: https://blog.iamsuleiman.com/android-material-design-tutorial/
-
 public class LibraryFragment extends Fragment implements LibraryItemClickListener {
     public static final String TAG = LibraryFragment.class.getSimpleName();
     //private OnFragmentInteractionListener mListener;
 
     private SharedPreferences sp;
+    private LibraryAdapter adapter;
     private ArrayList<LibraryElement> elements;
     private ProgressBar progressBar;
     private TextView annotation;
@@ -66,16 +75,20 @@ public class LibraryFragment extends Fragment implements LibraryItemClickListene
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        elements = new ArrayList<>();
         HttpUtils.setIp(sp.getString("ipKey", null));
         RestCalls.getAllDocs(new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                //Populate elements
-                // todo: parse response body
-                elements = LibraryElement.generateElements(20); //todo: Populate library
+                Gson gson = new Gson();
+                JsonObject jsonObject = gson.fromJson(new String(responseBody), JsonObject.class);
+                //int count = jsonObject.get("total_rows").getAsInt(); //todo: display number of hits
+                JsonArray jsonArray = jsonObject.get("rows").getAsJsonArray();
+                for(int i=0; i<jsonArray.size(); i++) {
+                    Log.d("asdf", jsonArray.get(i).toString());
+                    RestCalls.getDoc(jsonArray.get(i).getAsJsonObject().get("id").getAsString(), docResponseHandler);
+                }
                 inflateLibrary(view);
-                progressBar.setVisibility(View.GONE);
-
             }
 
             @Override
@@ -88,10 +101,44 @@ public class LibraryFragment extends Fragment implements LibraryItemClickListene
         });
     }
 
+    private AsyncHttpResponseHandler docResponseHandler = new AsyncHttpResponseHandler() {
+        @Override
+        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+            Gson gson = new Gson();
+            LibraryElement element = gson.fromJson(new String(responseBody), LibraryElement.class);
+
+            JsonObject jsonObject = gson.fromJson(new String(responseBody), JsonObject.class);
+            String imageName = jsonObject.get("_attachments").getAsJsonObject().keySet().toArray()[0].toString();
+            RestCalls.getImage(element.getId(), imageName, new AsyncHttpResponseHandler() {
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                    Bitmap bmp = BitmapFactory.decodeByteArray(responseBody, 0, responseBody.length);
+                    element.setImage(bmp);
+                    adapter.notifyItemChanged(elements.indexOf(element));
+                    progressBar.setVisibility(View.GONE);
+                }
+
+                @Override
+                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                    Toast.makeText(getActivity(), getString(R.string.error_img_not_found), Toast.LENGTH_LONG).show();
+                }
+            });
+            element.setImgUrl(HttpUtils.baseUrl + element.getId() + "/" + imageName); //todo: Maybe get image via url
+
+            elements.add(element);
+            //adapter.notifyItemChanged(elements.size()-1);
+        }
+
+        @Override
+        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+            Toast.makeText(getActivity(), getString(R.string.error_doc_not_found), Toast.LENGTH_LONG).show();
+        }
+    };
+
     private void inflateLibrary(View view) {
         //Inflate library
         RecyclerView library = view.findViewById(R.id.LibraryRecycler);
-        LibraryAdapter adapter = new LibraryAdapter(elements, (LibraryItemClickListener) this);
+        adapter = new LibraryAdapter(elements, (LibraryItemClickListener) this);
         library.setAdapter(adapter);
         int spanCount = 4; //Number of columns in Portrait
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)

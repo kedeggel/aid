@@ -1,5 +1,6 @@
 package de.htwg.mobilecomputing.aid.Library;
 
+import android.graphics.Bitmap;
 import android.media.Image;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -10,29 +11,58 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class LibraryElement implements Parcelable {
-    private Image image;
-    private String label;
+    private String _id;
+    private String sensor;
+    private String location;
+    private int timestamp;
+    private Bitmap image;
+    private String imgUrl;
+
+    /*private String label;
     private Date date;
 
     public LibraryElement(Image image, String label, Date date) {
         this.image = image;
         this.label = label;
         this.date = date;
-    }
+    }*/
 
     protected LibraryElement(Parcel in) {
-        label = in.readString();
+        //label = in.readString();
     }
 
-    public Image getImage() {
+    public String getId() {
+        return _id;
+    }
+
+    public String getSensor() {
+        return sensor;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public int getTimestamp() {
+        return timestamp;
+    }
+
+    public Bitmap getImage() {
         return image;
     }
 
-    public void setImage(Image image) {
+    public void setImage(Bitmap image) {
         this.image = image;
     }
 
-    public String getLabel() {
+    public String getImgUrl() {
+        return imgUrl;
+    }
+
+    public void setImgUrl(String imgUrl) {
+        this.imgUrl = imgUrl;
+    }
+    /*public String getLabel() {
         return label;
     }
 
@@ -69,7 +99,7 @@ public class LibraryElement implements Parcelable {
         } catch (ParseException e) {
             return null;
         }
-    }
+    }*/
 
     @Override
     public int describeContents() {
@@ -78,7 +108,7 @@ public class LibraryElement implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(label);
+        //dest.writeString(label);
     }
 
     public static final Creator<LibraryElement> CREATOR = new Creator<LibraryElement>() {
