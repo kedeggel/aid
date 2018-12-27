@@ -1,5 +1,6 @@
 package de.htwg.mobilecomputing.aid.Fragment;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -14,6 +15,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -30,6 +34,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 import cz.msebera.android.httpclient.Header;
+import de.htwg.mobilecomputing.aid.Activity.SettingsActivity;
 import de.htwg.mobilecomputing.aid.Library.ItemOffsetDecorationList;
 import de.htwg.mobilecomputing.aid.Library.LibraryAdapter;
 import de.htwg.mobilecomputing.aid.Library.LibraryElement;
@@ -46,6 +51,29 @@ public class LibraryFragment extends Fragment implements LibraryItemClickListene
     private ArrayList<LibraryElement> elements;
     private ProgressBar progressBar;
     private TextView annotation;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
+        super.onCreateOptionsMenu(menu,menuInflater);
+        menuInflater.inflate(R.menu.toolbar_main, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                Intent intent = new Intent(getActivity(), SettingsActivity.class);
+                startActivity(intent);
+                return true;
+        }
+        return false;
+    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

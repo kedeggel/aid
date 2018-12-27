@@ -2,6 +2,7 @@ package de.htwg.mobilecomputing.aid.Fragment;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -16,6 +17,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.HttpAuthHandler;
@@ -32,6 +36,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import de.htwg.mobilecomputing.aid.Activity.SettingsActivity;
 import de.htwg.mobilecomputing.aid.Camera.CapturePhotoUtils;
 import de.htwg.mobilecomputing.aid.R;
 
@@ -46,6 +51,24 @@ public class CameraFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
+        super.onCreateOptionsMenu(menu,menuInflater);
+        menuInflater.inflate(R.menu.toolbar_main, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                Intent intent = new Intent(getActivity(), SettingsActivity.class);
+                startActivity(intent);
+                return true;
+        }
+        return false;
     }
 
     @Override

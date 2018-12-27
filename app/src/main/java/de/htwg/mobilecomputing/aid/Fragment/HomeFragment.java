@@ -1,5 +1,6 @@
 package de.htwg.mobilecomputing.aid.Fragment;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -7,7 +8,12 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
@@ -19,6 +25,7 @@ import com.google.gson.JsonObject;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import cz.msebera.android.httpclient.Header;
+import de.htwg.mobilecomputing.aid.Activity.SettingsActivity;
 import de.htwg.mobilecomputing.aid.R;
 import de.htwg.mobilecomputing.aid.Rest.HttpUtils;
 import de.htwg.mobilecomputing.aid.Rest.RestCalls;
@@ -26,6 +33,29 @@ import de.htwg.mobilecomputing.aid.Rest.RestCalls;
 public class HomeFragment extends Fragment {
     private TextView subtitle;
     private ProgressBar progressBar;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
+        super.onCreateOptionsMenu(menu,menuInflater);
+        menuInflater.inflate(R.menu.toolbar_main, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                Intent intent = new Intent(getActivity(), SettingsActivity.class);
+                startActivity(intent);
+                return true;
+        }
+        return false;
+    }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

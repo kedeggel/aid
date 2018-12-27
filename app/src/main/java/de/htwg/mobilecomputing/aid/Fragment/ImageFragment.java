@@ -1,5 +1,6 @@
 package de.htwg.mobilecomputing.aid.Fragment;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -7,12 +8,16 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.transition.TransitionInflater;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.github.chrisbanes.photoview.PhotoView;
 
+import de.htwg.mobilecomputing.aid.Activity.SettingsActivity;
 import de.htwg.mobilecomputing.aid.Library.LibraryElement;
 import de.htwg.mobilecomputing.aid.R;
 
@@ -32,6 +37,7 @@ public class ImageFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
 
         //Ensures smoother transitions
         postponeEnterTransition();
@@ -39,6 +45,23 @@ public class ImageFragment extends Fragment {
                 TransitionInflater.from(getContext())
                         .inflateTransition(android.R.transition.move)
         );
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
+        super.onCreateOptionsMenu(menu,menuInflater);
+        menuInflater.inflate(R.menu.toolbar_image, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                Intent intent = new Intent(getActivity(), SettingsActivity.class);
+                startActivity(intent);
+                return true;
+        }
+        return false;
     }
 
     @Override

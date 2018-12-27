@@ -22,21 +22,18 @@ import de.htwg.mobilecomputing.aid.R;
 
 public class MainActivity extends AppCompatActivity {
     public static final String TAG = MainActivity.class.getSimpleName();
+
     private final FragmentManager fragmentManager = getSupportFragmentManager();
     private final Fragment home = new HomeFragment();
     private final Fragment camera = new CameraFragment();
     private final Fragment library = new LibraryFragment();
 
-    private Menu menu;
     private BottomNavigationView navigation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
         navigation = findViewById(R.id.navigation);
         if(savedInstanceState == null) {
@@ -47,40 +44,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.toolbar_main, menu);
-        this.menu = menu;
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_settings:
-                Intent intent = new Intent(this, SettingsActivity.class);
-                startActivity(intent);
-                return true;
-
-            case R.id.action_share:
-                //todo: Share image
-                return true;
-
-            default:
-                // If we got here, the user's action was not recognized.
-                // Invoke the superclass to handle it.
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    @Override
     public void onBackPressed() {
         super.onBackPressed();
 
         //Show UI elements hidden in ImageFragment Landscape Orientation and Settings Menu
+        //todo: Check
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
         getSupportActionBar().show();
-        menu.findItem(R.id.action_settings).setVisible(true);
+        //menu.findItem(R.id.action_settings).setVisible(true);
         navigation.setVisibility(View.VISIBLE);
     }
 
