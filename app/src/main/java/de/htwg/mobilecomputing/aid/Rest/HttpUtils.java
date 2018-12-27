@@ -15,7 +15,7 @@ public class HttpUtils {
     }
 
     public static void get(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
-        Log.d("asdf", getAbsoluteUrl(url));
+        //Log.d("RestGet", getAbsoluteUrl(url));
         client.get(getAbsoluteUrl(url), params, responseHandler);
     }
 

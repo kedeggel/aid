@@ -16,20 +16,26 @@ public class LibraryElement implements Parcelable {
     private String location;
     private int timestamp;
     private Bitmap image;
-    private String imgUrl;
-
-    /*private String label;
-    private Date date;
-
-    public LibraryElement(Image image, String label, Date date) {
-        this.image = image;
-        this.label = label;
-        this.date = date;
-    }*/
 
     protected LibraryElement(Parcel in) {
-        //label = in.readString();
+        _id = in.readString();
+        sensor = in.readString();
+        location = in.readString();
+        timestamp = in.readInt();
+        image = in.readParcelable(Bitmap.class.getClassLoader());
     }
+
+    public static final Creator<LibraryElement> CREATOR = new Creator<LibraryElement>() {
+        @Override
+        public LibraryElement createFromParcel(Parcel in) {
+            return new LibraryElement(in);
+        }
+
+        @Override
+        public LibraryElement[] newArray(int size) {
+            return new LibraryElement[size];
+        }
+    };
 
     public String getId() {
         return _id;
@@ -55,51 +61,9 @@ public class LibraryElement implements Parcelable {
         this.image = image;
     }
 
-    public String getImgUrl() {
-        return imgUrl;
+    public String getFormattedTimestamp() {
+        return "2000-01-01 08:00:00"; //todo: format timestamp as date
     }
-
-    public void setImgUrl(String imgUrl) {
-        this.imgUrl = imgUrl;
-    }
-    /*public String getLabel() {
-        return label;
-    }
-
-    public void setLabel(String label) {
-        this.label = label;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
-    private static int count = 0;
-    public static ArrayList<LibraryElement> generateElements(int number) {
-        ArrayList<LibraryElement> elements = new ArrayList<>();
-        for(int i=0; i<number; i++) {
-            count++;
-            Date date;
-            if(count % 2 == 0)
-                date = parseDate("2018-12-" + (count % 24) + " 01:00:00");
-            else
-                date = parseDate("2018-12-" + ((count - 1) % 24) + " 01:00:00");
-            elements.add(new LibraryElement(null, "Image " + count, date));
-        }
-        return elements;
-    }
-
-    private static Date parseDate(String date) {
-        try {
-            return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(date);
-        } catch (ParseException e) {
-            return null;
-        }
-    }*/
 
     @Override
     public int describeContents() {
@@ -108,18 +72,10 @@ public class LibraryElement implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        //dest.writeString(label);
+        dest.writeString(_id);
+        dest.writeString(sensor);
+        dest.writeString(location);
+        dest.writeInt(timestamp);
+        dest.writeParcelable(image, flags);
     }
-
-    public static final Creator<LibraryElement> CREATOR = new Creator<LibraryElement>() {
-        @Override
-        public LibraryElement createFromParcel(Parcel in) {
-            return new LibraryElement(in);
-        }
-
-        @Override
-        public LibraryElement[] newArray(int size) {
-            return new LibraryElement[size];
-        }
-    };
 }

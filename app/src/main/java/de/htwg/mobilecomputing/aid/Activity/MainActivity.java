@@ -23,12 +23,10 @@ import de.htwg.mobilecomputing.aid.R;
 public class MainActivity extends AppCompatActivity {
     public static final String TAG = MainActivity.class.getSimpleName();
     private final FragmentManager fragmentManager = getSupportFragmentManager();
-    private final Fragment home = HomeFragment.newInstance();
-    private final Fragment camera = CameraFragment.newInstance();
-    private final Fragment library = LibraryFragment.newInstance();
-    private final Fragment settings = new SettingsFragment();
+    private final Fragment home = new HomeFragment();
+    private final Fragment camera = new CameraFragment();
+    private final Fragment library = new LibraryFragment();
 
-    private FragmentTransaction fragmentTransaction;
     private Menu menu;
     private BottomNavigationView navigation;
 
@@ -42,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
 
         navigation = findViewById(R.id.navigation);
         if(savedInstanceState == null) {
-            fragmentTransaction = fragmentManager.beginTransaction();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.fragment, home).commit();
         }
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
@@ -60,12 +58,6 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_settings:
-                /*fragmentManager
-                        .beginTransaction()
-                        .addToBackStack(TAG)
-                        .replace(R.id.fragment, settings)
-                        .commit();
-                item.setVisible(false);*/
                 Intent intent = new Intent(this, SettingsActivity.class);
                 startActivity(intent);
                 return true;

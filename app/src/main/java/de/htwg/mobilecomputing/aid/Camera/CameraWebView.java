@@ -15,7 +15,6 @@ public class CameraWebView extends WebViewClient {
 
     @Override
     public void onPageFinished(WebView view, String url) {
-        // TODO Auto-generated method stub
         super.onPageFinished(view, url);
         progressBar.setVisibility(View.GONE);
     }
