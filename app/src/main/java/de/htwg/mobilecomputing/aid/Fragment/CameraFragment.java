@@ -5,9 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.Camera;
 import android.graphics.Canvas;
-import android.graphics.Picture;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -17,7 +15,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,16 +26,12 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import java.io.FileOutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import de.htwg.mobilecomputing.aid.Camera.CameraWebView;
 import de.htwg.mobilecomputing.aid.Camera.CapturePhotoUtils;
 import de.htwg.mobilecomputing.aid.R;
 
@@ -47,7 +40,6 @@ public class CameraFragment extends Fragment {
     private WebView cameraView;
     private Button startCamera;
     private Button takePicture;
-    private ProgressBar progressBar;
 
     private static boolean cameraOn = false;
 
@@ -59,7 +51,7 @@ public class CameraFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_camera, container, false);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(getString(R.string.camera));
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(getString(R.string.fragment_camera));
 
         sp = PreferenceManager.getDefaultSharedPreferences(getContext());
 
@@ -86,8 +78,6 @@ public class CameraFragment extends Fragment {
         takePicture = view.findViewById(R.id.button_take_picture);
         takePicture.setOnClickListener(takePictureOnClickListener);
 
-        progressBar = view.findViewById(R.id.progress_bar);
-
         setCamera();
 
         return view;
@@ -107,7 +97,7 @@ public class CameraFragment extends Fragment {
     private void setCamera() {
         if(cameraOn) {
             takePicture.setEnabled(true);
-            startCamera.setText(getString(R.string.stop_camera));
+            startCamera.setText(getString(R.string.button_stop_camera));
             cameraView.setVisibility(View.VISIBLE);
             cameraView.setWebViewClient(webViewClient);
             cameraView.getSettings().setLoadWithOverviewMode(true);
@@ -116,10 +106,9 @@ public class CameraFragment extends Fragment {
             cameraView.loadUrl(url);
         } else {
             takePicture.setEnabled(false);
-            startCamera.setText(getString(R.string.start_camera));
+            startCamera.setText(getString(R.string.button_start_camera));
             cameraView.setVisibility(View.GONE);
             cameraView.loadUrl("about:blank");
-            //progressBar.setVisibility(View.GONE);
         }
     }
 
@@ -178,17 +167,13 @@ public class CameraFragment extends Fragment {
                 ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
             else {
                 //Capture bitmap
-                /*Picture picture = cameraView.capturePicture();
-                Bitmap b = Bitmap.createBitmap(picture.getWidth(), picture.getHeight(), Bitmap.Config.ARGB_8888);
-                Canvas c = new Canvas(b);
-                picture.draw(c);*/
                 Bitmap b = Bitmap.createBitmap(cameraView.getWidth(), cameraView.getHeight(), Bitmap.Config.ARGB_8888);
                 Canvas c = new Canvas(b);
                 cameraView.draw(c);
 
                 //Save bitmap to phone gallery
                 DateFormat df = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
-                String result = CapturePhotoUtils.insertImage(getActivity().getContentResolver(), b, "AID_" + df.format(new Date()), getString(R.string.default_description));
+                String result = CapturePhotoUtils.insertImage(getActivity().getContentResolver(), b, "AID_" + df.format(new Date()), getString(R.string.image_default_description));
                 if (result != null) {
                     Toast.makeText(getActivity(), getString(R.string.success_image_saved), Toast.LENGTH_LONG).show();
                 } else {

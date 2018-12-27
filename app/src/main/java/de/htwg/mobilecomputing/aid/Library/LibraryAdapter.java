@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.ViewHold
 
     // todo group items by date: https://stackoverflow.com/questions/34848401/divide-elements-on-groups-in-recyclerview
     public class ViewHolder extends RecyclerView.ViewHolder {
+        final LinearLayout layout;
         final ImageView image;
         final TextView line1;
         final TextView line2;
@@ -27,6 +29,7 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.ViewHold
 
         ViewHolder(Context context, View itemView) {
             super(itemView);
+            layout = itemView.findViewById(R.id.item_library);
             image = itemView.findViewById(R.id.item_library_image);
             line1 = itemView.findViewById(R.id.item_library_line1);
             line2 = itemView.findViewById(R.id.item_library_line2);
@@ -74,10 +77,10 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.ViewHold
         // Set transition name same as the Image name
         ViewCompat.setTransitionName(viewHolder.image, element.getId());
 
-        viewHolder.image.setOnClickListener(new ImageView.OnClickListener() {
+        viewHolder.layout.setOnClickListener(new ImageView.OnClickListener() {
             @Override
             public void onClick(View view) {
-                libraryItemClickListener.onLibrarytemClickListener(viewHolder.getAdapterPosition(), element, viewHolder.image);
+                libraryItemClickListener.onLibraryItemClickListener(viewHolder.getAdapterPosition(), element, viewHolder.image);
             }
         });
     }

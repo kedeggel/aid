@@ -15,7 +15,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
@@ -31,7 +30,7 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(getString(R.string.home));
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(getString(R.string.fragment_home));
 
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getContext());
         HttpUtils.setIp(sp.getString("ipKey", null));
@@ -54,7 +53,7 @@ public class HomeFragment extends Fragment {
                 int count = jsonObject.get("total_rows").getAsInt(); //todo: restrict to 24 hours
                 progressBar.setVisibility(View.GONE);
                 subtitle.setVisibility(View.VISIBLE);
-                subtitle.setText(count + " " + getString(R.string.intrusions_detected));
+                subtitle.setText(count + " " + getString(R.string.annotation_intrusions_detected));
             }
 
             @Override

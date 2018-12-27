@@ -20,15 +20,24 @@
         style="@style/Dialog">
 
         <TextView
-            android:id="@+id/detail_label"
+            android:id="@+id/detail_line1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@string/lorem_ipsum"
             style="@style/Object"/>
 
         <TextView
-            android:id="@+id/detail_date"
+            android:id="@+id/detail_line2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@string/lorem_ipsum"
+            style="@style/Object"/>
+
+        <TextView
+            android:id="@+id/detail_line3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/lorem_ipsum"
             style="@style/Object"/>
 
     </LinearLayout>

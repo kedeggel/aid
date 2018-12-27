@@ -1,7 +1,6 @@
 package de.htwg.mobilecomputing.aid.Fragment;
 
 import android.content.res.Configuration;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,19 +13,17 @@ import android.widget.TextView;
 
 import com.github.chrisbanes.photoview.PhotoView;
 
-import java.text.SimpleDateFormat;
-
 import de.htwg.mobilecomputing.aid.Library.LibraryElement;
 import de.htwg.mobilecomputing.aid.R;
 
 public class ImageFragment extends Fragment {
     private static final String EXTRA_TRANSITION_NAME= "transition_name";
-    private static final String EXTRA_IMAGE = "image_item";
+    private static final String EXTRA_ELEMENT = "element_item";
 
     public static ImageFragment newInstance(LibraryElement element) {
         ImageFragment fragment = new ImageFragment();
         Bundle args = new Bundle();
-        args.putParcelable(EXTRA_IMAGE, element);
+        args.putParcelable(EXTRA_ELEMENT, element);
         args.putString(EXTRA_TRANSITION_NAME, element.getId());
         fragment.setArguments(args);
         return fragment;
@@ -38,12 +35,10 @@ public class ImageFragment extends Fragment {
 
         //Ensures smoother transitions
         postponeEnterTransition();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            setSharedElementEnterTransition(
-                    TransitionInflater.from(getContext())
-                            .inflateTransition(android.R.transition.move)
-            );
-        }
+        setSharedElementEnterTransition(
+                TransitionInflater.from(getContext())
+                        .inflateTransition(android.R.transition.move)
+        );
     }
 
     @Override
@@ -66,20 +61,17 @@ public class ImageFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        final LibraryElement element = getArguments().getParcelable(EXTRA_IMAGE);
-        final PhotoView imageView = view.findViewById(R.id.detail_image);
-        final TextView labelView = view.findViewById(R.id.detail_label);
-        final TextView dateView = view.findViewById(R.id.detail_date);
+        final LibraryElement element = getArguments().getParcelable(EXTRA_ELEMENT);
+        final PhotoView image = view.findViewById(R.id.detail_image);
+        final TextView line1 = view.findViewById(R.id.detail_line1);
+        final TextView line2 = view.findViewById(R.id.detail_line2);
+        final TextView line3 = view.findViewById(R.id.detail_line3);
 
-        imageView.setImageBitmap(element.getImage());
-        //labelView.setText(element.getLabel());
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        //dateView.setText(getString(R.string.date_taken) + ": " + dateFormat.format(element.getDate()));
+        image.setImageBitmap(element.getImage());
+        line1.setText(getString(R.string.element_date_taken) + ": " + element.getFormattedTimestamp());
+        line2.setText(getString(R.string.element_sensor) + ": "+ element.getSensor());
+        line3.setText(getString(R.string.element_location) + ": " + element.getLocation());
 
-        String transitionName = getArguments().getString(EXTRA_TRANSITION_NAME);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            imageView.setTransitionName(transitionName);
-        }
+        image.setTransitionName(getArguments().getString(EXTRA_TRANSITION_NAME));
     }
 }

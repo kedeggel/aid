@@ -1,5 +1,6 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/item_library"
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -25,21 +26,21 @@
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:textSize="20sp"
-            android:text="Lorem Ipsum" />
+            android:text="@string/lorem_ipsum" />
 
         <TextView
             android:id="@+id/item_library_line2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:text="Lorem Ipsum" />
+            android:text="@string/lorem_ipsum" />
 
         <TextView
             android:id="@+id/item_library_line3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:text="Lorem Ipsum" />
+            android:text="@string/lorem_ipsum" />
 
     </LinearLayout>
 

@@ -63,6 +63,8 @@ public class LibraryElement implements Parcelable {
 
     public String getFormattedTimestamp() {
         return "2000-01-01 08:00:00"; //todo: format timestamp as date
+        //SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        //dateFormat.format("String");
     }
 
     @Override

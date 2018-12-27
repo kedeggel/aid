@@ -13,7 +13,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,7 +50,7 @@ public class LibraryFragment extends Fragment implements LibraryItemClickListene
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_library, container, false);
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(getString(R.string.library));
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(getString(R.string.fragment_library));
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getContext());
         progressBar = view.findViewById(R.id.progress_bar);
         annotation = view.findViewById(R.id.annotation);
@@ -101,6 +100,7 @@ public class LibraryFragment extends Fragment implements LibraryItemClickListene
         library.addItemDecoration(itemDecoration);
     }
 
+    //Response Handler for getting all Events
     private AsyncHttpResponseHandler allDocsResponeHandler = new AsyncHttpResponseHandler() {
         @Override
         public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
@@ -121,6 +121,7 @@ public class LibraryFragment extends Fragment implements LibraryItemClickListene
         }
     };
 
+    //Response Handler for getting one Event
     private AsyncHttpResponseHandler docResponseHandler = new AsyncHttpResponseHandler() {
         @Override
         public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
@@ -153,7 +154,7 @@ public class LibraryFragment extends Fragment implements LibraryItemClickListene
     };
 
     @Override
-    public void onLibrarytemClickListener(int position, LibraryElement element, ImageView imageView) {
+    public void onLibraryItemClickListener(int position, LibraryElement element, ImageView imageView) {
         LibraryViewPagerFragment libraryViewPagerFragment = LibraryViewPagerFragment.newInstance(position, elements);
 
         assert getFragmentManager() != null;
