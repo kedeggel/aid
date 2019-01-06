@@ -1,5 +1,6 @@
 package de.htwg.mobilecomputing.aid.Fragment;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -31,6 +32,7 @@ import com.google.gson.JsonObject;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Objects;
 
 import cz.msebera.android.httpclient.Header;
@@ -157,22 +159,40 @@ public class LibraryFragment extends Fragment implements LibraryItemClickListene
             LibraryElement element = gson.fromJson(new String(responseBody), LibraryElement.class);
 
             JsonObject jsonObject = gson.fromJson(new String(responseBody), JsonObject.class);
-            String imageName = Objects.requireNonNull(jsonObject.get("_attachments").getAsJsonObject().keySet().toArray())[0].toString();
-            RestCalls.getImage(element.getId(), imageName, new AsyncHttpResponseHandler() {
-                @Override
-                public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                    Bitmap bmp = BitmapFactory.decodeByteArray(responseBody, 0, responseBody.length);
-                    element.setImage(bmp);
-                    adapter.notifyItemChanged(elements.indexOf(element));
-                    progressBar.setVisibility(View.GONE);
-                }
+            if(jsonObject.has("_attachments")) {
+                String imageName = Objects.requireNonNull(jsonObject.get("_attachments").getAsJsonObject().keySet().toArray())[0].toString();
+                RestCalls.getImage(element.getId(), imageName, new AsyncHttpResponseHandler() {
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                        if(getActivity() != null) { //in case user navigated away
+                            Bitmap bmp = BitmapFactory.decodeByteArray(responseBody, 0, responseBody.length);
+                            element.setImage(bmp);
+                            adapter.notifyItemChanged(elements.indexOf(element));
+                            progressBar.setVisibility(View.GONE);
+                        }
+                    }
 
-                @Override
-                public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                    Toast.makeText(getActivity(), getString(R.string.error_img_not_found), Toast.LENGTH_LONG).show();
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                        if(getActivity() != null)
+                            Toast.makeText(getActivity(), getString(R.string.error_img_not_found), Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+
+            //add elements in chronological order
+            if(elements.isEmpty())
+                elements.add(element);
+            else {
+                int index = 0;
+                while(index < elements.size() && elements.get(index).getTimestamp() > element.getTimestamp()) {
+                    index++;
                 }
-            });
-            elements.add(element); //todo: add in chronological order
+                if(index < elements.size())
+                    elements.add(index, element);
+                else
+                    elements.add(element);
+            }
         }
 
         @Override

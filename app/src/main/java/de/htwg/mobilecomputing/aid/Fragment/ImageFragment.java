@@ -2,7 +2,10 @@ package de.htwg.mobilecomputing.aid.Fragment;
 
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -17,6 +20,12 @@ import android.widget.TextView;
 
 import com.github.chrisbanes.photoview.PhotoView;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Date;
+
 import de.htwg.mobilecomputing.aid.Activity.SettingsActivity;
 import de.htwg.mobilecomputing.aid.Library.LibraryElement;
 import de.htwg.mobilecomputing.aid.R;
@@ -24,6 +33,8 @@ import de.htwg.mobilecomputing.aid.R;
 public class ImageFragment extends Fragment {
     private static final String EXTRA_TRANSITION_NAME= "transition_name";
     private static final String EXTRA_ELEMENT = "element_item";
+
+    private LibraryElement element;
 
     public static ImageFragment newInstance(LibraryElement element) {
         ImageFragment fragment = new ImageFragment();
@@ -60,6 +71,9 @@ public class ImageFragment extends Fragment {
                 Intent intent = new Intent(getActivity(), SettingsActivity.class);
                 startActivity(intent);
                 return true;
+            case R.id.action_share:
+                //todo: share image
+                return true;
         }
         return false;
     }
@@ -84,14 +98,14 @@ public class ImageFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        final LibraryElement element = getArguments().getParcelable(EXTRA_ELEMENT);
+        element = getArguments().getParcelable(EXTRA_ELEMENT);
         final PhotoView image = view.findViewById(R.id.detail_image);
         final TextView line1 = view.findViewById(R.id.detail_line1);
         final TextView line2 = view.findViewById(R.id.detail_line2);
         final TextView line3 = view.findViewById(R.id.detail_line3);
 
         image.setImageBitmap(element.getImage());
-        line1.setText(getString(R.string.element_date_taken) + ": " + element.getFormattedTimestamp());
+        line1.setText(getString(R.string.element_date_taken) + ": " + new Date((long)element.getTimestamp()));
         line2.setText(getString(R.string.element_sensor) + ": "+ element.getSensor());
         line3.setText(getString(R.string.element_location) + ": " + element.getLocation());
 

@@ -1,5 +1,6 @@
 package de.htwg.mobilecomputing.aid.Fragment;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -78,18 +79,22 @@ public class HomeFragment extends Fragment {
         RestCalls.getAllDocs(new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                Gson gson = new Gson();
-                JsonObject jsonObject = gson.fromJson(new String(responseBody), JsonObject.class);
-                int count = jsonObject.get("total_rows").getAsInt(); //todo: restrict to 24 hours
-                progressBar.setVisibility(View.GONE);
-                subtitle.setVisibility(View.VISIBLE);
-                subtitle.setText(count + " " + getString(R.string.annotation_intrusions_detected));
+                if(getActivity() != null) { //in case user navigated away
+                    Gson gson = new Gson();
+                    JsonObject jsonObject = gson.fromJson(new String(responseBody), JsonObject.class);
+                    int count = jsonObject.get("total_rows").getAsInt(); //todo: restrict to 24 hours
+                    progressBar.setVisibility(View.GONE);
+                    subtitle.setVisibility(View.VISIBLE);
+                    subtitle.setText(count + " " + getString(R.string.annotation_intrusions_detected));
+                }
             }
 
             @Override
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                Toast.makeText(getActivity(), getString(R.string.error_time_out), Toast.LENGTH_LONG).show();
-                progressBar.setVisibility(View.GONE);
+                if(getActivity() != null) {
+                    Toast.makeText(getActivity(), getString(R.string.error_time_out), Toast.LENGTH_LONG).show();
+                    progressBar.setVisibility(View.GONE);
+                }
             }
         });
     }

@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import de.htwg.mobilecomputing.aid.R;
 
@@ -66,7 +67,7 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.ViewHold
         image.setImageBitmap(element.getImage());
 
         TextView line1 = viewHolder.line1;
-        line1.setText(element.getFormattedTimestamp());
+        line1.setText(new Date((long)element.getTimestamp()).toString());
 
         TextView line2 = viewHolder.line2;
         line2.setText(element.getSensor());
