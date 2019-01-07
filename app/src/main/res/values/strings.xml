@@ -1,6 +1,7 @@
 <resources>
     <string name="annotation_camera_off">CAMERA OFF</string>
     <string name="annotation_intrusions_detected">intrusions detected</string>
+    <string name="annotation_last_intrusion">Latest intrusion</string>
     <string name="annotation_no_entries">NO ENTRIES FOUND</string>
     <string name="app_name">Automated Intrusion Detection</string>
     <string name="button_start_camera">Turn Camera On</string>

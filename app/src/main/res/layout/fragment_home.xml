@@ -25,13 +25,28 @@
         android:layout_height="0dp"
         android:layout_weight="2">
 
-        <TextView
-            android:id="@+id/subtitle"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="0 intrusions detected in the last 24 hours"
-            android:textSize="18sp"
-            android:textAlignment="center"/>
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/subtitle1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="0 intrusions detected in the last 24 hours"
+                android:textSize="18sp"
+                android:textAlignment="center"/>
+
+            <TextView
+                android:id="@+id/subtitle2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Last intrusion: Jan 01 2019"
+                android:textSize="18sp"
+                android:textAlignment="center"/>
+
+        </LinearLayout>
 
         <ProgressBar
             android:id="@+id/progress_bar"

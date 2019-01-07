@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -25,14 +26,21 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
+import org.json.JSONObject;
+
+import java.util.Date;
+
 import cz.msebera.android.httpclient.Header;
 import de.htwg.mobilecomputing.aid.Activity.SettingsActivity;
+import de.htwg.mobilecomputing.aid.Library.LibraryElement;
 import de.htwg.mobilecomputing.aid.R;
 import de.htwg.mobilecomputing.aid.Rest.HttpUtils;
 import de.htwg.mobilecomputing.aid.Rest.RestCalls;
 
 public class HomeFragment extends Fragment {
-    private TextView subtitle;
+    private TextView subtitle1;
+    private TextView subtitle2;
+    private boolean loaded;
     private ProgressBar progressBar;
 
     @Override
@@ -66,16 +74,20 @@ public class HomeFragment extends Fragment {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getContext());
         HttpUtils.setIp(sp.getString("ipKey", null));
 
-        subtitle = view.findViewById(R.id.subtitle);
+        subtitle1 = view.findViewById(R.id.subtitle1);
+        subtitle2 = view.findViewById(R.id.subtitle2);
         progressBar = view.findViewById(R.id.progress_bar);
 
-        subtitle.setVisibility(View.GONE);
+        subtitle1.setVisibility(View.GONE);
+        subtitle2.setVisibility(View.GONE);
+        loaded = false;
 
         return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        //fill first subtitle
         RestCalls.getAllDocs(new AsyncHttpResponseHandler() {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
@@ -83,9 +95,9 @@ public class HomeFragment extends Fragment {
                     Gson gson = new Gson();
                     JsonObject jsonObject = gson.fromJson(new String(responseBody), JsonObject.class);
                     int count = jsonObject.get("total_rows").getAsInt(); //todo: restrict to 24 hours
-                    progressBar.setVisibility(View.GONE);
-                    subtitle.setVisibility(View.VISIBLE);
-                    subtitle.setText(count + " " + getString(R.string.annotation_intrusions_detected));
+                    subtitle1.setText(count + " " + getString(R.string.annotation_intrusions_detected));
+                    subtitle1.setVisibility(View.VISIBLE);
+                    setProgressBarVisibility();
                 }
             }
 
@@ -93,9 +105,44 @@ public class HomeFragment extends Fragment {
             public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
                 if(getActivity() != null) {
                     Toast.makeText(getActivity(), getString(R.string.error_time_out), Toast.LENGTH_LONG).show();
-                    progressBar.setVisibility(View.GONE);
+                    setProgressBarVisibility();
                 }
             }
         });
+
+        //fill second subtitle
+        RestCalls.getSelector(getContext(), 1, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                if(getActivity() != null) {
+                    Gson gson = new Gson();
+                    JsonObject jsonObject = gson.fromJson(new String(responseBody), JsonObject.class);
+                    if(jsonObject.has("docs")) {
+                        JsonObject doc = jsonObject.get("docs").getAsJsonArray().get(0).getAsJsonObject();
+                        if(doc.has("timestamp")) {
+                            long timestamp = doc.get("timestamp").getAsLong();
+                            subtitle2.setText(getString(R.string.annotation_last_intrusion) + ": " + DateUtils.getRelativeTimeSpanString(timestamp));
+                            subtitle2.setVisibility(View.VISIBLE);
+                        }
+                    }
+                    setProgressBarVisibility();
+                }
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                if(getActivity() != null) {
+                    Toast.makeText(getActivity(), getString(R.string.error_time_out), Toast.LENGTH_LONG).show();
+                    setProgressBarVisibility();
+                }
+            }
+        });
+    }
+
+    private void setProgressBarVisibility() {
+        if(loaded)
+            progressBar.setVisibility(View.GONE);
+        else
+            loaded = true;
     }
 }
