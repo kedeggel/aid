@@ -95,6 +95,8 @@ public class HomeFragment extends Fragment {
                     Gson gson = new Gson();
                     JsonObject jsonObject = gson.fromJson(new String(responseBody), JsonObject.class);
                     int count = jsonObject.get("total_rows").getAsInt(); //todo: restrict to 24 hours
+                    if(count > 0)
+                        count--;
                     subtitle1.setText(count + " " + getString(R.string.annotation_intrusions_detected));
                     subtitle1.setVisibility(View.VISIBLE);
                     setProgressBarVisibility();

@@ -99,7 +99,8 @@ public class LibraryFragment extends Fragment implements LibraryItemClickListene
         @Override
         public void onRefresh() {
             progressBar.setVisibility(View.VISIBLE);
-            RestCalls.getAllDocs(allDocsResponeHandler);
+            //RestCalls.getAllDocs(allDocsResponeHandler);
+            RestCalls.getSelector(getContext(), 0, docsResponseHandler);
             swipe.setRefreshing(false);
         }
     };
@@ -107,7 +108,8 @@ public class LibraryFragment extends Fragment implements LibraryItemClickListene
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        RestCalls.getAllDocs(allDocsResponeHandler);
+        //RestCalls.getAllDocs(allDocsResponeHandler);
+        RestCalls.getSelector(getContext(), 0, docsResponseHandler);
 
         //Inflate library
         RecyclerView library = view.findViewById(R.id.LibraryRecycler);
@@ -130,7 +132,64 @@ public class LibraryFragment extends Fragment implements LibraryItemClickListene
         library.addItemDecoration(itemDecoration);
     }
 
-    //Response Handler for getting all Events
+    private AsyncHttpResponseHandler docsResponseHandler = new AsyncHttpResponseHandler() {
+        @Override
+        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+            Gson gson = new Gson();
+            JsonArray jsonArray = gson.fromJson(new String(responseBody), JsonObject.class).get("docs").getAsJsonArray();
+            elements.clear();
+            for(int i=0; i<jsonArray.size(); i++) {
+                JsonObject jsonObject = jsonArray.get(i).getAsJsonObject();
+                LibraryElement element = gson.fromJson(jsonObject, LibraryElement.class);
+
+                if(jsonObject.has("_attachments")) {
+                    String imageName = Objects.requireNonNull(jsonObject.get("_attachments").getAsJsonObject().keySet().toArray())[0].toString();
+                    RestCalls.getImage(element.getId(), imageName, new AsyncHttpResponseHandler() {
+                        @Override
+                        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                            if(getActivity() != null) { //in case user navigated away
+                                Bitmap bmp = BitmapFactory.decodeByteArray(responseBody, 0, responseBody.length);
+                                element.setImage(bmp);
+                                adapter.notifyItemChanged(elements.indexOf(element));
+                                progressBar.setVisibility(View.GONE);
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                            if(getActivity() != null)
+                                Toast.makeText(getActivity(), getString(R.string.error_img_not_found), Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }
+
+                //add elements in chronological order
+                if(elements.isEmpty())
+                    elements.add(element);
+                else {
+                    int index = 0;
+                    while(index < elements.size() && elements.get(index).getTimestamp() > element.getTimestamp()) {
+                        index++;
+                    }
+                    if(index < elements.size())
+                        elements.add(index, element);
+                    else
+                        elements.add(element);
+                }
+            }
+        }
+
+        @Override
+        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+            if(getActivity() != null) {
+                Toast.makeText(getActivity(), getString(R.string.error_time_out), Toast.LENGTH_LONG).show();
+                progressBar.setVisibility(View.GONE);
+                annotation.setVisibility(View.VISIBLE);
+            }
+        }
+    };
+
+/*    //Response Handler for getting all Events
     private AsyncHttpResponseHandler allDocsResponeHandler = new AsyncHttpResponseHandler() {
         @Override
         public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
@@ -199,7 +258,7 @@ public class LibraryFragment extends Fragment implements LibraryItemClickListene
         public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
             Toast.makeText(getActivity(), getString(R.string.error_doc_not_found), Toast.LENGTH_LONG).show();
         }
-    };
+    };*/
 
     @Override
     public void onLibraryItemClickListener(int position, LibraryElement element, ImageView imageView) {

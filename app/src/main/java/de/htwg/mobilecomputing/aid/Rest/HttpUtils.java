@@ -22,7 +22,7 @@ public class HttpUtils {
     }
 
     public static void get(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
-        Log.d("RestGet", getAbsoluteUrl(url));
+        //Log.d("RestGet", getAbsoluteUrl(url));
         client.get(getAbsoluteUrl(url), params, responseHandler);
     }
 
@@ -31,7 +31,7 @@ public class HttpUtils {
     }
 
     public static void postJSON(Context context, String url, JSONObject json, AsyncHttpResponseHandler responseHandler) {
-        Log.d("RestGet", getAbsoluteUrl(url));
+        //Log.d("RestGet", getAbsoluteUrl(url));
         StringEntity entity = null;
         try {
             entity = new StringEntity(json.toString());

@@ -53,8 +53,7 @@ public class RestCalls {
             e.printStackTrace();
         }
 
-        Log.d("RestGet", json.toString());
-
+        //Log.d("RestGet", json.toString());
         HttpUtils.postJSON(context, FIND, json, responseHandler);
     }
 }
