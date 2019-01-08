@@ -95,7 +95,6 @@ public class ImageFragment extends Fragment {
                 getActivity().findViewById(R.id.navigation).setVisibility(View.VISIBLE);
             }
         }*/
-        Log.d("asdf", "Fullscreen flag: " + fullscreen);
 
         return view;
     }

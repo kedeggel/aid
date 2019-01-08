@@ -18,11 +18,11 @@ public class HttpUtils {
     private static AsyncHttpClient client = new AsyncHttpClient();
 
     public static void setIp(String ip) {
-        baseUrl = "http://" + ip + ":5984/aid/";
+        baseUrl = String.format("http://%s:5984/", ip);
     }
 
     public static void get(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
-        //Log.d("RestGet", getAbsoluteUrl(url));
+        Log.d("RestGet", getAbsoluteUrl(url));
         client.get(getAbsoluteUrl(url), params, responseHandler);
     }
 
@@ -31,7 +31,8 @@ public class HttpUtils {
     }
 
     public static void postJSON(Context context, String url, JSONObject json, AsyncHttpResponseHandler responseHandler) {
-        //Log.d("RestGet", getAbsoluteUrl(url));
+        Log.d("RestGet", getAbsoluteUrl(url));
+        Log.d("RestGet", json.toString());
         StringEntity entity = null;
         try {
             entity = new StringEntity(json.toString());

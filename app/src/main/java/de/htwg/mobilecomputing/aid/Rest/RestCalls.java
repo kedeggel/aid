@@ -14,8 +14,9 @@ import org.json.JSONObject;
 import de.htwg.mobilecomputing.aid.Library.LibraryElement;
 
 public class RestCalls {
-    private static final String ALL_DOCS = "_design/count/_view/count";
-    private static final String FIND = "_find";
+    private static final String ALL_DOCS = "aid/_design/count/_view/count";
+    private static final String FIND = "aid/_find";
+    private static final String TOKEN = "register";
 
     public static void getAllDocs(AsyncHttpResponseHandler responseHandler) {
         HttpUtils.get(ALL_DOCS, null, responseHandler);
@@ -26,7 +27,7 @@ public class RestCalls {
     }
 
     public static void getImage(String doc, String path, AsyncHttpResponseHandler responseHandler) {
-        HttpUtils.get(doc + "/" + path, null, responseHandler);
+        HttpUtils.get("aid/" + doc + "/" + path, null, responseHandler);
     }
 
     public static void getSelector(Context context, int limit, AsyncHttpResponseHandler responseHandler) {
@@ -52,8 +53,16 @@ public class RestCalls {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-        //Log.d("RestGet", json.toString());
         HttpUtils.postJSON(context, FIND, json, responseHandler);
+    }
+
+    public static void sendDeviceToken(Context context, String token, AsyncHttpResponseHandler responseHandler) {
+        JSONObject json = new JSONObject();
+        try {
+            json.put("device-token", token);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        HttpUtils.postJSON(context, TOKEN, json, responseHandler);
     }
 }
