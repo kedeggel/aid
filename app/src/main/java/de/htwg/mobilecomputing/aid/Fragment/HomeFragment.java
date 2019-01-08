@@ -1,6 +1,5 @@
 package de.htwg.mobilecomputing.aid.Fragment;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -8,12 +7,9 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.format.DateUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,13 +24,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
-import org.json.JSONObject;
-
-import java.util.Date;
-
 import cz.msebera.android.httpclient.Header;
 import de.htwg.mobilecomputing.aid.Activity.SettingsActivity;
-import de.htwg.mobilecomputing.aid.Library.LibraryElement;
 import de.htwg.mobilecomputing.aid.R;
 import de.htwg.mobilecomputing.aid.Rest.HttpUtils;
 import de.htwg.mobilecomputing.aid.Rest.RestCalls;
@@ -106,10 +97,13 @@ public class HomeFragment extends Fragment {
             if(getActivity() != null) { //in case user navigated away
                 Gson gson = new Gson();
                 JsonObject jsonObject = gson.fromJson(new String(responseBody), JsonObject.class);
-                int count = jsonObject.get("total_rows").getAsInt(); //todo: restrict to 24 hours
-                if(count > 0)
-                    count--;
-                subtitle1.setText(count + " " + getString(R.string.annotation_intrusions_detected));
+                int count = jsonObject.getAsJsonArray("rows").
+                        get(0).getAsJsonObject().get("value").getAsInt();
+                if (count == 1) {
+                    subtitle1.setText(String.format("%d %s", count, getString(R.string.annotation_single_intrusion_detected)));
+                } else {
+                    subtitle1.setText(String.format("%d %s", count, getString(R.string.annotation_intrusions_detected)));
+                }
                 subtitle1.setVisibility(View.VISIBLE);
                 setProgressBarVisibility();
             }
@@ -134,7 +128,7 @@ public class HomeFragment extends Fragment {
                     JsonObject doc = jsonObject.get("docs").getAsJsonArray().get(0).getAsJsonObject();
                     if(doc.has("timestamp")) {
                         long timestamp = doc.get("timestamp").getAsLong();
-                        subtitle2.setText(getString(R.string.annotation_last_intrusion) + ": " + DateUtils.getRelativeTimeSpanString(timestamp));
+                        subtitle2.setText(String.format("%s: %s", getString(R.string.annotation_last_intrusion), DateUtils.getRelativeTimeSpanString(timestamp)));
                         subtitle2.setVisibility(View.VISIBLE);
                     }
                 }
