@@ -99,11 +99,10 @@ public class HomeFragment extends Fragment {
                 JsonObject jsonObject = gson.fromJson(new String(responseBody), JsonObject.class);
                 int count = jsonObject.getAsJsonArray("rows").
                         get(0).getAsJsonObject().get("value").getAsInt();
-                if (count == 1) {
+                if (count == 1)
                     subtitle1.setText(String.format("%d %s", count, getString(R.string.annotation_single_intrusion_detected)));
-                } else {
+                else
                     subtitle1.setText(String.format("%d %s", count, getString(R.string.annotation_intrusions_detected)));
-                }
                 subtitle1.setVisibility(View.VISIBLE);
                 setProgressBarVisibility();
             }

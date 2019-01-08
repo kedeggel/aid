@@ -2,11 +2,7 @@ package de.htwg.mobilecomputing.aid.Fragment;
 
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.Bitmap;
-import android.media.Image;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -23,10 +19,6 @@ import android.widget.TextView;
 
 import com.github.chrisbanes.photoview.PhotoView;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.Date;
 
 import de.htwg.mobilecomputing.aid.Activity.SettingsActivity;
@@ -37,7 +29,7 @@ public class ImageFragment extends Fragment {
     private static final String EXTRA_TRANSITION_NAME= "transition_name";
     private static final String EXTRA_ELEMENT = "element_item";
 
-    private static boolean fullscreen = false;
+    public static boolean fullscreen = false;
 
     private LibraryElement element;
 
@@ -86,6 +78,7 @@ public class ImageFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_image, container, false);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(getString(R.string.fragment_image));
         element = getArguments().getParcelable(EXTRA_ELEMENT);
 
         //Enter fullsceen mode in landscape orientation
@@ -117,9 +110,9 @@ public class ImageFragment extends Fragment {
         final TextView line3 = view.findViewById(R.id.detail_line3);
 
         image.setImageBitmap(element.getImage());
-        line1.setText(getString(R.string.element_date_taken) + ": " + new Date((long)element.getTimestamp()));
-        line2.setText(getString(R.string.element_sensor) + ": "+ element.getSensor());
-        line3.setText(getString(R.string.element_location) + ": " + element.getLocation());
+        line1.setText(String.format("%s: %s", getString(R.string.element_date_taken), new Date((long) element.getTimestamp())));
+        line2.setText(String.format("%s: %s", getString(R.string.element_sensor), element.getSensor()));
+        line3.setText(String.format("%s: %s", getString(R.string.element_location), element.getLocation()));
 
         if(element.getImage() == null)
             image.setVisibility(View.GONE);
@@ -171,7 +164,10 @@ public class ImageFragment extends Fragment {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        //if (isVisibleToUser && getView() != null)
-            //setFullscreen();
+        //todo: Show UI elements when swiping to element without image
+        /*if(isVisibleToUser && getView() != null && element.getImage() == null) {
+            fullscreen = false;
+            setFullscreen();
+        }*/
     }
 }

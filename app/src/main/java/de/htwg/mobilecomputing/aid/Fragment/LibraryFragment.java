@@ -261,6 +261,12 @@ public class LibraryFragment extends Fragment implements LibraryItemClickListene
     };*/
 
     @Override
+    public void onResume() {
+        super.onResume();
+        ImageFragment.fullscreen = false;
+    }
+
+    @Override
     public void onLibraryItemClickListener(int position, LibraryElement element, ImageView imageView) {
         LibraryViewPagerFragment libraryViewPagerFragment = LibraryViewPagerFragment.newInstance(position, elements);
 
