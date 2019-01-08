@@ -14,7 +14,7 @@ import org.json.JSONObject;
 import de.htwg.mobilecomputing.aid.Library.LibraryElement;
 
 public class RestCalls {
-    private static final String ALL_DOCS = "_all_docs";
+    private static final String ALL_DOCS = "_design/count/_view/count";
     private static final String FIND = "_find";
 
     public static void getAllDocs(AsyncHttpResponseHandler responseHandler) {

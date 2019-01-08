@@ -34,5 +34,6 @@
     <string name="pref_title_username">Username</string>
     <string name="success_image_saved">Image saved to Phone Gallery</string>
     <string name="element_header">Event Details</string>
+    <string name="annotation_single_intrusion_detected">intrusion detected</string>
 
 </resources>
