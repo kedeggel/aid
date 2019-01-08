@@ -269,7 +269,7 @@ public class LibraryFragment extends Fragment implements LibraryItemClickListene
                 .beginTransaction()
                 .addSharedElement(imageView, Objects.requireNonNull(ViewCompat.getTransitionName(imageView)))
                 .addToBackStack(TAG)
-                .replace(R.id.fragment, libraryViewPagerFragment)
+                .replace(R.id.fragment, libraryViewPagerFragment, TAG)
                 .commit();
     }
 }
