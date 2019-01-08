@@ -8,6 +8,8 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.format.DateUtils;
@@ -38,6 +40,7 @@ import de.htwg.mobilecomputing.aid.Rest.HttpUtils;
 import de.htwg.mobilecomputing.aid.Rest.RestCalls;
 
 public class HomeFragment extends Fragment {
+    private SwipeRefreshLayout swipe;
     private TextView subtitle1;
     private TextView subtitle2;
     private boolean loaded;
@@ -82,69 +85,86 @@ public class HomeFragment extends Fragment {
         subtitle2.setVisibility(View.GONE);
         loaded = false;
 
+        swipe = view.findViewById(R.id.swipeRefreshLayout);
+        swipe.setOnRefreshListener(onRefreshListener);
+
         return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         //fill first subtitle
-        RestCalls.getAllDocs(new AsyncHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                if(getActivity() != null) { //in case user navigated away
-                    Gson gson = new Gson();
-                    JsonObject jsonObject = gson.fromJson(new String(responseBody), JsonObject.class);
-                    int count = jsonObject.get("total_rows").getAsInt(); //todo: restrict to 24 hours
-                    if(count > 0)
-                        count--;
-                    subtitle1.setText(count + " " + getString(R.string.annotation_intrusions_detected));
-                    subtitle1.setVisibility(View.VISIBLE);
-                    setProgressBarVisibility();
-                }
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                if(getActivity() != null) {
-                    Toast.makeText(getActivity(), getString(R.string.error_time_out), Toast.LENGTH_LONG).show();
-                    setProgressBarVisibility();
-                }
-            }
-        });
+        RestCalls.getAllDocs(docsResponseHandler);
 
         //fill second subtitle
-        RestCalls.getSelector(getContext(), 1, new AsyncHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                if(getActivity() != null) {
-                    Gson gson = new Gson();
-                    JsonObject jsonObject = gson.fromJson(new String(responseBody), JsonObject.class);
-                    if(jsonObject.has("docs")) {
-                        JsonObject doc = jsonObject.get("docs").getAsJsonArray().get(0).getAsJsonObject();
-                        if(doc.has("timestamp")) {
-                            long timestamp = doc.get("timestamp").getAsLong();
-                            subtitle2.setText(getString(R.string.annotation_last_intrusion) + ": " + DateUtils.getRelativeTimeSpanString(timestamp));
-                            subtitle2.setVisibility(View.VISIBLE);
-                        }
-                    }
-                    setProgressBarVisibility();
-                }
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                if(getActivity() != null) {
-                    Toast.makeText(getActivity(), getString(R.string.error_time_out), Toast.LENGTH_LONG).show();
-                    setProgressBarVisibility();
-                }
-            }
-        });
+        RestCalls.getSelector(getContext(), 1, selectorResponseHandler);
     }
 
+    private AsyncHttpResponseHandler docsResponseHandler = new AsyncHttpResponseHandler() {
+        @Override
+        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+            if(getActivity() != null) { //in case user navigated away
+                Gson gson = new Gson();
+                JsonObject jsonObject = gson.fromJson(new String(responseBody), JsonObject.class);
+                int count = jsonObject.get("total_rows").getAsInt(); //todo: restrict to 24 hours
+                if(count > 0)
+                    count--;
+                subtitle1.setText(count + " " + getString(R.string.annotation_intrusions_detected));
+                subtitle1.setVisibility(View.VISIBLE);
+                setProgressBarVisibility();
+            }
+        }
+
+        @Override
+        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+            if(getActivity() != null) {
+                Toast.makeText(getActivity(), getString(R.string.error_time_out), Toast.LENGTH_LONG).show();
+                setProgressBarVisibility();
+            }
+        }
+    };
+
+    private AsyncHttpResponseHandler selectorResponseHandler = new AsyncHttpResponseHandler() {
+        @Override
+        public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+            if(getActivity() != null) {
+                Gson gson = new Gson();
+                JsonObject jsonObject = gson.fromJson(new String(responseBody), JsonObject.class);
+                if(jsonObject.has("docs")) {
+                    JsonObject doc = jsonObject.get("docs").getAsJsonArray().get(0).getAsJsonObject();
+                    if(doc.has("timestamp")) {
+                        long timestamp = doc.get("timestamp").getAsLong();
+                        subtitle2.setText(getString(R.string.annotation_last_intrusion) + ": " + DateUtils.getRelativeTimeSpanString(timestamp));
+                        subtitle2.setVisibility(View.VISIBLE);
+                    }
+                }
+                setProgressBarVisibility();
+            }
+        }
+
+        @Override
+        public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+            if(getActivity() != null) {
+                Toast.makeText(getActivity(), getString(R.string.error_time_out), Toast.LENGTH_LONG).show();
+                setProgressBarVisibility();
+            }
+        }
+    };
+
+    private SwipeRefreshLayout.OnRefreshListener onRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
+        @Override
+        public void onRefresh() {
+            RestCalls.getAllDocs(docsResponseHandler);
+            RestCalls.getSelector(getContext(), 1, selectorResponseHandler);
+        }
+    };
+
+    //every other time this method is called, the progress bars are turned off
     private void setProgressBarVisibility() {
-        if(loaded)
+        if(loaded) {
             progressBar.setVisibility(View.GONE);
-        else
-            loaded = true;
+            swipe.setRefreshing(false);
+        }
+        loaded = !loaded;
     }
 }
