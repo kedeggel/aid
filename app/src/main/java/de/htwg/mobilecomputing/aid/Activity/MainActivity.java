@@ -35,6 +35,7 @@ import de.htwg.mobilecomputing.aid.Fragment.SettingsFragment;
 import de.htwg.mobilecomputing.aid.R;
 import de.htwg.mobilecomputing.aid.Rest.HttpUtils;
 import de.htwg.mobilecomputing.aid.Rest.RestCalls;
+import de.htwg.mobilecomputing.aid.Support.ParameterManager;
 import me.pushy.sdk.Pushy;
 
 public class MainActivity extends AppCompatActivity {
@@ -52,8 +53,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        if(!ParameterManager.isRegistered(this) && ParameterManager.getToken(this) != null)
+            sendToken(ParameterManager.getToken(this));
+
         //Setup Pushy
-        if(!Pushy.isRegistered(getApplicationContext())) {
+        if(!Pushy.isRegistered(this)) {
             new RegisterForPushNotificationsAsync().execute();
         }
         Pushy.listen(this);
@@ -64,6 +68,26 @@ public class MainActivity extends AppCompatActivity {
             fragmentTransaction.replace(R.id.fragment, home).commit();
         }
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+    }
+
+    private void sendToken(String token) {
+        // Send the token to your backend server via an HTTP POST request
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        HttpUtils.setIp(sp.getString("ipKey", null));
+        RestCalls.sendDeviceToken(getApplicationContext(), token, new AsyncHttpResponseHandler() {
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
+                Toast.makeText(getApplicationContext(), "Pushy token successfully sent", Toast.LENGTH_LONG).show();
+                ParameterManager.setRegistered(getApplicationContext(), true);
+            }
+
+            @Override
+            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
+                Toast.makeText(getApplicationContext(), "Pushy token could not be sent", Toast.LENGTH_LONG).show();
+                ParameterManager.setRegistered(getApplicationContext(), false);
+            }
+        });
+
     }
 
     @Override
@@ -110,37 +134,16 @@ public class MainActivity extends AppCompatActivity {
                 // Assign a unique token to this device
                 String deviceToken = Pushy.register(getApplicationContext());
 
-                // Send the token to your backend server via an HTTP GET request
-                SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                HttpUtils.setIp(sp.getString("ipKey", null));
-                RestCalls.sendDeviceToken(getApplicationContext(), deviceToken, tokenResponseHandler);
+                // Persist token in Shared Parameters
+                ParameterManager.setToken(getApplicationContext(), deviceToken);
+
+                // Send token to server
+                sendToken(deviceToken);
             }
-            catch (Exception exc) {
-                // Return exc to onPostExecute
-                return exc;
+            catch (Exception e) {
+                Toast.makeText(getApplicationContext(), e.toString(), Toast.LENGTH_LONG).show();
             }
             return null;
-        }
-
-        private AsyncHttpResponseHandler tokenResponseHandler = new AsyncHttpResponseHandler() {
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-                Toast.makeText(getApplicationContext(), "Token successfully sent", Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error) {
-                Toast.makeText(getApplicationContext(), "Token could not be sent", Toast.LENGTH_LONG).show();
-                Pushy.unregister(getApplicationContext());
-            }
-        };
-
-        @Override
-        protected void onPostExecute(Exception exc) {
-            // Failed?
-            if (exc != null)
-                Toast.makeText(getApplicationContext(), exc.toString(), Toast.LENGTH_LONG).show();
-            // Succeeded, optionally do something to alert the user
         }
     }
 }

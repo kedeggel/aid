@@ -17,6 +17,7 @@
     <string name="error_img_not_found">Image not found</string>
     <string name="error_internet_connection">Phone not connected to the internet</string>
     <string name="error_login_credentials">Username or Password incorrect</string>
+    <string name="error_pushy_exception">Error registering Pushy token</string>
     <string name="error_time_out">Connection timed out. Check your ip and port settings.</string>
     <string name="fragment_camera">Camera</string>
     <string name="fragment_image">Event</string>
