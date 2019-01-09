@@ -35,6 +35,7 @@ import android.widget.Toast;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import de.htwg.mobilecomputing.aid.Activity.SettingsActivity;
 import de.htwg.mobilecomputing.aid.Camera.CapturePhotoUtils;
@@ -195,7 +196,7 @@ public class CameraFragment extends Fragment {
                 cameraView.draw(c);
 
                 //Save bitmap to phone gallery
-                DateFormat df = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
+                DateFormat df = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss", Locale.US);
                 String result = CapturePhotoUtils.insertImage(getActivity().getContentResolver(), b, "AID_" + df.format(new Date()), getString(R.string.image_default_description));
                 if (result != null) {
                     Toast.makeText(getActivity(), getString(R.string.success_image_saved), Toast.LENGTH_LONG).show();

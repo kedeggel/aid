@@ -24,6 +24,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
+import java.util.Locale;
+
 import cz.msebera.android.httpclient.Header;
 import de.htwg.mobilecomputing.aid.Activity.SettingsActivity;
 import de.htwg.mobilecomputing.aid.R;
@@ -100,9 +102,9 @@ public class HomeFragment extends Fragment {
                 int count = jsonObject.getAsJsonArray("rows").
                         get(0).getAsJsonObject().get("value").getAsInt();
                 if (count == 1)
-                    subtitle1.setText(String.format("%d %s", count, getString(R.string.annotation_single_intrusion_detected)));
+                    subtitle1.setText(String.format(Locale.getDefault(), "%d %s", count, getString(R.string.annotation_single_intrusion_detected)));
                 else
-                    subtitle1.setText(String.format("%d %s", count, getString(R.string.annotation_intrusions_detected)));
+                    subtitle1.setText(String.format(Locale.getDefault(), "%d %s", count, getString(R.string.annotation_intrusions_detected)));
                 subtitle1.setVisibility(View.VISIBLE);
                 setProgressBarVisibility();
             }

@@ -1,7 +1,11 @@
 package de.htwg.mobilecomputing.aid.Fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -19,7 +23,10 @@ import android.widget.TextView;
 
 import com.github.chrisbanes.photoview.PhotoView;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.Date;
+import java.util.Random;
 
 import de.htwg.mobilecomputing.aid.Activity.SettingsActivity;
 import de.htwg.mobilecomputing.aid.Library.LibraryElement;
@@ -57,8 +64,10 @@ public class ImageFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
-        super.onCreateOptionsMenu(menu,menuInflater);
+        super.onCreateOptionsMenu(menu, menuInflater);
         menuInflater.inflate(R.menu.toolbar_image, menu);
+        if(element.getImage() == null)
+            menu.findItem(R.id.action_share).setVisible(false);
     }
 
     @Override
@@ -69,7 +78,11 @@ public class ImageFragment extends Fragment {
                 startActivity(intent);
                 return true;
             case R.id.action_share:
-                //todo: share image
+                Intent shareIntent = new Intent();
+                shareIntent.setAction(Intent.ACTION_SEND);
+                shareIntent.putExtra(Intent.EXTRA_STREAM, bitmapToUriConverter(element.getImage()));
+                shareIntent.setType("image/jpeg");
+                startActivity(Intent.createChooser(shareIntent, "Share this image"));
                 return true;
         }
         return false;
@@ -164,9 +177,59 @@ public class ImageFragment extends Fragment {
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
         //todo: Show UI elements when swiping to element without image
-        /*if(isVisibleToUser && getView() != null && element.getImage() == null) {
-            fullscreen = false;
-            setFullscreen();
-        }*/
+        if(isVisibleToUser && getView() != null && element.getImage() == null) {
+            //fullscreen = false;
+            //setFullscreen();
+        }
+    }
+
+    private Uri bitmapToUriConverter(Bitmap mBitmap) {
+        Uri uri = null;
+        try {
+            final BitmapFactory.Options options = new BitmapFactory.Options();
+            // Calculate inSampleSize
+            options.inSampleSize = calculateInSampleSize(options, 100, 100);
+
+            // Decode bitmap with inSampleSize set
+            options.inJustDecodeBounds = false;
+            Bitmap newBitmap = Bitmap.createScaledBitmap(mBitmap, 200, 200,
+                    true);
+            File file = new File(getActivity().getFilesDir(), "Image"
+                    + new Random().nextInt() + ".jpeg");
+            FileOutputStream out = getActivity().openFileOutput(file.getName(), Context.MODE_WORLD_READABLE);
+            newBitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+            out.flush();
+            out.close();
+            //get absolute path
+            String realPath = file.getAbsolutePath();
+            File f = new File(realPath);
+            uri = Uri.fromFile(f);
+
+        } catch (Exception e) {
+            Log.e("Your Error Message", e.getMessage());
+        }
+        return uri;
+    }
+
+    private static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        // Raw height and width of image
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+
+            final int halfHeight = height / 2;
+            final int halfWidth = width / 2;
+
+            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+            // height and width larger than the requested height and width.
+            while ((halfHeight / inSampleSize) >= reqHeight
+                    && (halfWidth / inSampleSize) >= reqWidth) {
+                inSampleSize *= 2;
+            }
+        }
+
+        return inSampleSize;
     }
 }

@@ -1,37 +1,24 @@
 package de.htwg.mobilecomputing.aid.Activity;
 
-import android.Manifest;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
-import java.net.URL;
-
 import cz.msebera.android.httpclient.Header;
 import de.htwg.mobilecomputing.aid.Fragment.CameraFragment;
 import de.htwg.mobilecomputing.aid.Fragment.HomeFragment;
 import de.htwg.mobilecomputing.aid.Fragment.LibraryFragment;
-import de.htwg.mobilecomputing.aid.Fragment.SettingsFragment;
 import de.htwg.mobilecomputing.aid.R;
 import de.htwg.mobilecomputing.aid.Rest.HttpUtils;
 import de.htwg.mobilecomputing.aid.Rest.RestCalls;
@@ -40,6 +27,8 @@ import me.pushy.sdk.Pushy;
 
 public class MainActivity extends AppCompatActivity {
     public static final String TAG = MainActivity.class.getSimpleName();
+
+    private static int active = R.id.navigation_home;
 
     private final FragmentManager fragmentManager = getSupportFragmentManager();
     private final Fragment home = new HomeFragment();
@@ -64,10 +53,31 @@ public class MainActivity extends AppCompatActivity {
 
         navigation = findViewById(R.id.navigation);
         if(savedInstanceState == null) {
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.fragment, home).commit();
+            navigate();
         }
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                active = menuItem.getItemId();
+                return navigate();
+            }
+        });
+    }
+
+    private boolean navigate() {
+        navigation.setSelectedItemId(active);
+        switch(active) {
+            case R.id.navigation_home:
+                fragmentManager.beginTransaction().replace(R.id.fragment, home).commit();
+                return true;
+            case R.id.navigation_camera:
+                fragmentManager.beginTransaction().replace(R.id.fragment, camera).commit();
+                return true;
+            case R.id.navigation_library:
+                fragmentManager.beginTransaction().replace(R.id.fragment, library).commit();
+                return true;
+        }
+        return false;
     }
 
     private void sendToken(String token) {
@@ -87,7 +97,6 @@ public class MainActivity extends AppCompatActivity {
                 ParameterManager.setRegistered(getApplicationContext(), false);
             }
         });
-
     }
 
     @Override
@@ -95,38 +104,10 @@ public class MainActivity extends AppCompatActivity {
         super.onBackPressed();
 
         //Show UI elements hidden in ImageFragment Landscape Orientation and Settings Menu
-        //todo: Check
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
         getSupportActionBar().show();
-        //menu.findItem(R.id.action_settings).setVisible(true);
         navigation.setVisibility(View.VISIBLE);
     }
-
-    private final BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-            = new BottomNavigationView.OnNavigationItemSelectedListener() {
-
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            switch (item.getItemId()) {
-                case R.id.navigation_home:
-                    fragmentManager.beginTransaction()
-                            .replace(R.id.fragment, home)
-                            .commit();
-                    return true;
-                case R.id.navigation_camera:
-                    fragmentManager.beginTransaction()
-                            .replace(R.id.fragment, camera)
-                            .commit();
-                    return true;
-                case R.id.navigation_library:
-                    fragmentManager.beginTransaction()
-                            .replace(R.id.fragment, library)
-                            .commit();
-                    return true;
-            }
-            return false;
-        }
-    };
 
     private class RegisterForPushNotificationsAsync extends AsyncTask<Void, Void, Exception> {
         protected Exception doInBackground(Void... params) {
