@@ -82,7 +82,7 @@ public class CameraFragment extends Fragment {
         cameraView = view.findViewById(R.id.camera_view);
 
         //set height of camera view to correct aspect ratio
-        FrameLayout cameraFrame = view.findViewById(R.id.camera_frame);
+        final FrameLayout cameraFrame = view.findViewById(R.id.camera_frame);
         cameraFrame.post(new Runnable() {
             @Override
             public void run() {
