@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
 
         navigation = findViewById(R.id.navigation);
         if(savedInstanceState == null) {
+            navigation.setSelectedItemId(active);
             navigate();
         }
         navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -65,7 +66,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private boolean navigate() {
-        navigation.setSelectedItemId(active);
         switch(active) {
             case R.id.navigation_home:
                 fragmentManager.beginTransaction().replace(R.id.fragment, home).commit();

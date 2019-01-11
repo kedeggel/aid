@@ -11,8 +11,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 
 import de.htwg.mobilecomputing.aid.R;
 
@@ -67,7 +70,8 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.ViewHold
         image.setImageBitmap(element.getImage());
 
         TextView line1 = viewHolder.line1;
-        line1.setText(new Date((long)element.getTimestamp()).toString());
+        DateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.US);
+        line1.setText(df.format(new Date((long)element.getTimestamp())));
 
         TextView line2 = viewHolder.line2;
         line2.setText(element.getSensor());
