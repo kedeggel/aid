@@ -6,7 +6,7 @@ import android.content.SharedPreferences;
 public class ParameterManager {
     private SharedPreferences sharedPreferences;
 
-    private static final String TOKEN = "device-token";
+    private static final String TOKEN = "device_token";
     private static final String REGISTRATION = "registered";
 
     private static SharedPreferences getPreferences(Context context) {

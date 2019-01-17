@@ -59,7 +59,7 @@ public class RestCalls {
     public static void sendDeviceToken(Context context, String token, AsyncHttpResponseHandler responseHandler) {
         JSONObject json = new JSONObject();
         try {
-            json.put("device-token", token);
+            json.put("device_token", token);
         } catch (JSONException e) {
             e.printStackTrace();
         }
