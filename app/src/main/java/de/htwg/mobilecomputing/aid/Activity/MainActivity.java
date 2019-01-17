@@ -26,7 +26,6 @@ import de.htwg.mobilecomputing.aid.Support.ParameterManager;
 import me.pushy.sdk.Pushy;
 
 public class MainActivity extends AppCompatActivity {
-    public static final String TAG = MainActivity.class.getSimpleName();
 
     private static int active = R.id.navigation_home;
 

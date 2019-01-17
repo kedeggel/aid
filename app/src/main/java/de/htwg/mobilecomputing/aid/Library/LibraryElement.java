@@ -1,22 +1,14 @@
 package de.htwg.mobilecomputing.aid.Library;
 
 import android.graphics.Bitmap;
-import android.media.Image;
-import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.math.BigInteger;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-
 public class LibraryElement implements Parcelable, Comparable<LibraryElement>{
-    private String _id;
-    private String sensor;
-    private String location;
-    private long timestamp;
+    private final String _id;
+    private final String sensor;
+    private final String location;
+    private final long timestamp;
     private Bitmap image;
 
     protected LibraryElement(Parcel in) {
@@ -61,12 +53,6 @@ public class LibraryElement implements Parcelable, Comparable<LibraryElement>{
 
     public void setImage(Bitmap image) {
         this.image = image;
-    }
-
-    public String getFormattedTimestamp() {
-        return "2000-01-01 08:00:00"; //todo: format timestamp as date
-        //SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        //dateFormat.format("String");
     }
 
     @Override

@@ -20,10 +20,9 @@ import java.util.Locale;
 import de.htwg.mobilecomputing.aid.R;
 
 public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.ViewHolder> {
-    private ArrayList<LibraryElement> elements;
+    private final ArrayList<LibraryElement> elements;
     private final LibraryItemClickListener libraryItemClickListener;
 
-    // todo group items by date: https://stackoverflow.com/questions/34848401/divide-elements-on-groups-in-recyclerview
     public class ViewHolder extends RecyclerView.ViewHolder {
         final LinearLayout layout;
         final ImageView image;

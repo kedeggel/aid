@@ -1,6 +1,5 @@
 package de.htwg.mobilecomputing.aid.Fragment;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -35,12 +34,10 @@ public class LibraryViewPagerFragment extends Fragment {
 
         //Ensures smoother transitions
         postponeEnterTransition();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            setSharedElementEnterTransition(
-                    TransitionInflater.from(getContext())
-                            .inflateTransition(android.R.transition.move)
-            );
-        }
+        setSharedElementEnterTransition(
+                TransitionInflater.from(getContext())
+                        .inflateTransition(android.R.transition.move)
+        );
     }
 
     @Override

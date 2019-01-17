@@ -1,6 +1,5 @@
 package de.htwg.mobilecomputing.aid.Fragment;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -32,7 +31,6 @@ import com.google.gson.JsonObject;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Objects;
 
 import cz.msebera.android.httpclient.Header;
@@ -46,7 +44,7 @@ import de.htwg.mobilecomputing.aid.Rest.HttpUtils;
 import de.htwg.mobilecomputing.aid.Rest.RestCalls;
 
 public class LibraryFragment extends Fragment implements LibraryItemClickListener {
-    public static final String TAG = LibraryFragment.class.getSimpleName();
+    private static final String TAG = LibraryFragment.class.getSimpleName();
 
     private SwipeRefreshLayout swipe;
     private LibraryAdapter adapter;
@@ -95,7 +93,7 @@ public class LibraryFragment extends Fragment implements LibraryItemClickListene
         return view;
     }
 
-    private SwipeRefreshLayout.OnRefreshListener onRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
+    private final SwipeRefreshLayout.OnRefreshListener onRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
         @Override
         public void onRefresh() {
             progressBar.setVisibility(View.VISIBLE);
@@ -116,7 +114,7 @@ public class LibraryFragment extends Fragment implements LibraryItemClickListene
         adapter = new LibraryAdapter(elements, (LibraryItemClickListener) this);
         library.setAdapter(adapter);
 
-        //Create grid layout //todo: maybe add option to switch between views
+        //Create grid layout //todo: Future release: Add option to switch between views
         /*int spanCount = 4; //Number of columns in Portrait
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
             spanCount = 5; //Number of columns in Landscape
@@ -132,7 +130,7 @@ public class LibraryFragment extends Fragment implements LibraryItemClickListene
         library.addItemDecoration(itemDecoration);
     }
 
-    private AsyncHttpResponseHandler docsResponseHandler = new AsyncHttpResponseHandler() {
+    private final AsyncHttpResponseHandler docsResponseHandler = new AsyncHttpResponseHandler() {
         @Override
         public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
             Gson gson = new Gson();

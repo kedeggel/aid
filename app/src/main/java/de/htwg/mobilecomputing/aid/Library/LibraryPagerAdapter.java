@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import de.htwg.mobilecomputing.aid.Fragment.ImageFragment;
 
 public class LibraryPagerAdapter extends FragmentStatePagerAdapter {
-    private ArrayList<LibraryElement> elements;
+    private final ArrayList<LibraryElement> elements;
 
     public LibraryPagerAdapter(FragmentManager fm, ArrayList<LibraryElement> elements) {
         super(fm);

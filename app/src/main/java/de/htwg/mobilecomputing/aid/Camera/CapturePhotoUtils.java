@@ -25,10 +25,10 @@ public class CapturePhotoUtils {
      * that is inserted manually gets saved at the end of the gallery (because date is not populated).
      * @see android.provider.MediaStore.Images.Media#insertImage(ContentResolver, Bitmap, String, String)
      */
-    public static final String insertImage(ContentResolver cr,
-                                           Bitmap source,
-                                           String title,
-                                           String description) {
+    public static String insertImage(ContentResolver cr,
+                                     Bitmap source,
+                                     String title,
+                                     String description) {
 
         ContentValues values = new ContentValues();
         values.put(MediaStore.Images.Media.TITLE, title);
@@ -57,7 +57,7 @@ public class CapturePhotoUtils {
                 // Wait until MINI_KIND thumbnail is generated.
                 Bitmap miniThumb = MediaStore.Images.Thumbnails.getThumbnail(cr, id, MediaStore.Images.Thumbnails.MINI_KIND, null);
                 // This is for backward compatibility.
-                storeThumbnail(cr, miniThumb, id, 50F, 50F,MediaStore.Images.Thumbnails.MICRO_KIND);
+                storeThumbnail(cr, miniThumb, id);
             } else {
                 cr.delete(url, null, null);
                 url = null;
@@ -82,19 +82,16 @@ public class CapturePhotoUtils {
      * meta data. The StoreThumbnail method is private so it must be duplicated here.
      * @see android.provider.MediaStore.Images.Media (StoreThumbnail private method)
      */
-    private static final Bitmap storeThumbnail(
+    private static Bitmap storeThumbnail(
             ContentResolver cr,
             Bitmap source,
-            long id,
-            float width,
-            float height,
-            int kind) {
+            long id) {
 
         // create the matrix to scale it
         Matrix matrix = new Matrix();
 
-        float scaleX = width / source.getWidth();
-        float scaleY = height / source.getHeight();
+        float scaleX = (float) 50.0 / source.getWidth();
+        float scaleY = (float) 50.0 / source.getHeight();
 
         matrix.setScale(scaleX, scaleY);
 
@@ -105,7 +102,7 @@ public class CapturePhotoUtils {
         );
 
         ContentValues values = new ContentValues(4);
-        values.put(MediaStore.Images.Thumbnails.KIND,kind);
+        values.put(MediaStore.Images.Thumbnails.KIND,MediaStore.Images.Thumbnails.MICRO_KIND);
         values.put(MediaStore.Images.Thumbnails.IMAGE_ID,(int)id);
         values.put(MediaStore.Images.Thumbnails.HEIGHT,thumb.getHeight());
         values.put(MediaStore.Images.Thumbnails.WIDTH,thumb.getWidth());

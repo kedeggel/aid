@@ -1,15 +1,16 @@
 package de.htwg.mobilecomputing.aid.Support;
 
-import de.htwg.mobilecomputing.aid.Activity.MainActivity;
-import me.pushy.sdk.Pushy;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.content.Context;
-import android.app.PendingIntent;
 import android.media.RingtoneManager;
-import android.app.NotificationManager;
-import android.content.BroadcastReceiver;
 import android.support.v4.app.NotificationCompat;
+
+import de.htwg.mobilecomputing.aid.Activity.MainActivity;
+import me.pushy.sdk.Pushy;
 
 public class PushReceiver extends BroadcastReceiver {
     @Override
@@ -23,7 +24,7 @@ public class PushReceiver extends BroadcastReceiver {
         }
 
         // Prepare a notification with vibration, sound and lights
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "General") //todo: Maybe different channels?
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "General") //todo: Future release: Different channels
                 .setAutoCancel(true)
                 .setSmallIcon(android.R.drawable.ic_dialog_info)
                 .setContentTitle(notificationTitle)
@@ -37,7 +38,7 @@ public class PushReceiver extends BroadcastReceiver {
         Pushy.setNotificationChannel(builder, context);
 
         // Get an instance of the NotificationManager service
-        NotificationManager notificationManager = (NotificationManager) context.getSystemService(context.NOTIFICATION_SERVICE);
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
         // Build the notification and display it
         notificationManager.notify(1, builder.build());

@@ -93,7 +93,7 @@ public class HomeFragment extends Fragment {
         RestCalls.getSelector(getContext(), 1, selectorResponseHandler);
     }
 
-    private AsyncHttpResponseHandler docsResponseHandler = new AsyncHttpResponseHandler() {
+    private final AsyncHttpResponseHandler docsResponseHandler = new AsyncHttpResponseHandler() {
         @Override
         public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
             if(getActivity() != null) { //in case user navigated away
@@ -119,7 +119,7 @@ public class HomeFragment extends Fragment {
         }
     };
 
-    private AsyncHttpResponseHandler selectorResponseHandler = new AsyncHttpResponseHandler() {
+    private final AsyncHttpResponseHandler selectorResponseHandler = new AsyncHttpResponseHandler() {
         @Override
         public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
             if(getActivity() != null) {
@@ -146,7 +146,7 @@ public class HomeFragment extends Fragment {
         }
     };
 
-    private SwipeRefreshLayout.OnRefreshListener onRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
+    private final SwipeRefreshLayout.OnRefreshListener onRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
         @Override
         public void onRefresh() {
             RestCalls.getAllDocs(docsResponseHandler);

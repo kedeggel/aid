@@ -22,10 +22,6 @@ public class RestCalls {
         HttpUtils.get(ALL_DOCS, null, responseHandler);
     }
 
-    public static void getDoc(String id, AsyncHttpResponseHandler responseHandler) {
-        HttpUtils.get(id, null, responseHandler);
-    }
-
     public static void getImage(String doc, String path, AsyncHttpResponseHandler responseHandler) {
         HttpUtils.get("aid/" + doc + "/" + path, null, responseHandler);
     }

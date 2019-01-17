@@ -128,8 +128,10 @@ public class ImageFragment extends Fragment {
 
         if(element.getImage() == null)
             image.setVisibility(View.GONE);
-        else
+        else {
+            assert getArguments() != null;
             image.setTransitionName(getArguments().getString(EXTRA_TRANSITION_NAME));
+        }
 
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
             fullscreen = false;
@@ -188,7 +190,7 @@ public class ImageFragment extends Fragment {
         try {
             final BitmapFactory.Options options = new BitmapFactory.Options();
             // Calculate inSampleSize
-            options.inSampleSize = calculateInSampleSize(options, 100, 100);
+            options.inSampleSize = calculateInSampleSize(options);
 
             // Decode bitmap with inSampleSize set
             options.inJustDecodeBounds = false;
@@ -211,21 +213,21 @@ public class ImageFragment extends Fragment {
         return uri;
     }
 
-    private static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
+    private static int calculateInSampleSize(BitmapFactory.Options options) {
         // Raw height and width of image
         final int height = options.outHeight;
         final int width = options.outWidth;
         int inSampleSize = 1;
 
-        if (height > reqHeight || width > reqWidth) {
+        if (height > 100 || width > 100) {
 
             final int halfHeight = height / 2;
             final int halfWidth = width / 2;
 
             // Calculate the largest inSampleSize value that is a power of 2 and keeps both
             // height and width larger than the requested height and width.
-            while ((halfHeight / inSampleSize) >= reqHeight
-                    && (halfWidth / inSampleSize) >= reqWidth) {
+            while ((halfHeight / inSampleSize) >= 100
+                    && (halfWidth / inSampleSize) >= 100) {
                 inSampleSize *= 2;
             }
         }

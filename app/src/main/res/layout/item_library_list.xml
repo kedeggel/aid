@@ -3,8 +3,7 @@
     android:id="@+id/item_library"
     android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="?android:attr/selectableItemBackground" >
+    android:layout_height="wrap_content" >
 
     <de.htwg.mobilecomputing.aid.Library.SquareImageView
         android:id="@+id/item_library_image"
