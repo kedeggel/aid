@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    style="@style/Dialog">
+
+    <FrameLayout
+        android:id="@+id/camera_frame"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:background="@drawable/border"
+        style="@style/Object">
+
+        <TextView
+            android:text="@string/annotation_camera_off"
+            style="@style/Annotation"/>
+
+        <WebView
+            android:id="@+id/camera_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone"/>
+
+    </FrameLayout>
+
+    <Button
+        android:id="@+id/button_start_camera"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/button_start_camera"
+        style="@style/Button"/>
+
+    <Button
+        android:id="@+id/button_take_picture"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/button_take_picture"
+        android:enabled="false"
+        style="@style/Button"/>
+
+</LinearLayout>

@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/AutomatedIntrusionDetection.iml" filepath="$PROJECT_DIR$/AutomatedIntrusionDetection.iml" />
+      <module fileurl="file://$PROJECT_DIR$/aid.iml" filepath="$PROJECT_DIR$/aid.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
